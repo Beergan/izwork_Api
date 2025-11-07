@@ -1,0 +1,262 @@
+﻿@inherits MyWebPage
+@using SLK.Common
+@functions {
+    [Component(
+        Type = ComptType.Page_Template,
+        ComptName = "en:Page contact template|vi:Mẫu trang liên hệ")]
+
+    public class ViewModel
+    {
+        public IDictionary<string, string> Phrases { get; set; } = new Dictionary<string, string>();
+
+        public string Title { get; set; }
+
+        public string MetaDescription { get; set; }
+
+        public string MetaKeywords { get; set; }
+
+        [Field(
+            Title = "en:Banner|vi:Banner",
+            Required = false,
+            Control = InputControlType.Image)]
+        public string Banner { get; set; }
+
+        [Field(
+            Title = "en:Tiêu đề banner|vi:Tiêu đề banner",
+            Required = false,
+            Control = InputControlType.TextBox)]
+        public string TitleBanner { get; set; }
+
+        [Field(
+            Title = "en:Địa chỉ|vi:Địa chỉ",
+            Required = false,
+            Control = InputControlType.TextBox)]
+        public string Address { get; set; }
+
+        public class VM_Phone
+        {
+            [Field(
+               Title = "en:Số điện thoại 1|vi:Số điện thoại 1",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string PhoneOne { get; set; }
+
+            [Field(
+               Title = "en:Số điện thoại 2|vi:Số điện thoại 2",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string PhoneTwo { get; set; }
+        }
+
+        public class VM_Email
+        {
+            [Field(
+               Title = "en:Email 1|vi:Email 1",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string EmailOne { get; set; }
+
+            [Field(
+               Title = "en:Email 2|vi:Email 2",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string EmailTwo { get; set; }
+        }
+
+        [Field(Title = "Số điện thoại")]
+        public VM_Phone Phones { get; set; }
+
+        [Field(Title = "Email")]
+        public VM_Email Emails { get; set; }
+
+        public static ViewModel Default => new ViewModel()
+        {
+            TitleBanner = "Contact us",
+            Banner = "https://themeforest.kreativdev.com/samu/demo/assets/images/page-title-bg.png",
+            Address = "351b Nơ Trang Long",
+            Phones = new VM_Phone
+            {
+                PhoneOne = "+990 123 456 789",
+                PhoneTwo = "+990 123 456 789"
+            },
+            Emails = new VM_Email
+            {
+                EmailOne = "hello@example.com",
+                EmailTwo = "info@example.com"
+            }
+        };
+    }/*end_viewmodel*/
+    private ViewModel _data;
+    private ViewModel Data => _data ?? (_data = ViewModel.Default);
+    private MyTranslator Text => new MyTranslator(Data?.Phrases);
+    private FieldExtractor<PP_Contact> field = new FieldExtractor<PP_Contact>();
+    private PP_Contact model = new PP_Contact() { Status = "NEW" };
+}
+@{
+    var query = Request.Url.Query;
+
+    if (IsPost && query == "?contact")
+    {
+        new Func<Action>(() =>
+        {
+            try
+            {
+                AntiForgery.Validate();
+                string captcha = Request.Form[nameof(captcha)].ToLower();
+                Validation.RequireField(field.GetName(t => t.Name));
+                Validation.RequireField(field.GetName(t => t.Email));
+                Validation.Add(field.GetName(t => t.Email), Validator.Regex("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$"));
+                if (!Validation.IsValid())
+                {
+                    return AjaxResult.BadRequest("Hãy nhập đầy đủ thông tin!");
+                }
+
+                if (captcha != this.Context.Session["CaptchaVerify"].ToString())
+                {
+                    return AjaxResult.BadRequest("Capcha không hợp lệ!");
+                }
+
+                var model = new PP_Contact() { Status = "NEW" };
+                model.Name = Request.Form[field.GetName(t => t.Name)].NullIfWhiteSpace();
+                model.Email = Request.Form[field.GetName(t => t.Email)].NullIfWhiteSpace();
+                model.Phone = Request.Form[field.GetName(t => t.Phone)].NullIfWhiteSpace();                
+                model.Message = Request.Form[field.GetName(t => t.Message)].NullIfWhiteSpace();
+
+                model.ProcessNote = "Chưa xử lý";
+                Db.Insert<PP_Contact>(model);
+
+                Response.Write("Cám ơn bạn đã gửi thông tin, chúng tôi sẽ phản hồi cho bạn sớm nhất có thể!");
+                return () => Response.End();
+            }
+            catch (Exception ex)
+            {
+                return AjaxResult.BadRequest("Đã có lỗi xảy ra!");
+            }
+        })()();
+    }
+
+    _data = LoadData<ViewModel>(key: $"{LangId}-{FileName}#{NodeSlug}", setup: (model) =>
+    {
+        model = model ?? ViewModel.Default;
+
+        var page = Db.GetOne<PP_Page>(PageId);
+
+        if (page == null)
+        {
+            return model;
+        }
+
+        model.Title = page.Title;
+        model.MetaDescription = page.MetaDescription;
+        model.MetaKeywords = page.MetaKeywords;
+
+        return model;
+    });
+
+    Layout = $"~/_layouts/_layout.cshtml";
+    Page.Title = Data.Title;
+    Page.Description = Data.MetaDescription;
+    Page.Keywords = Data.MetaKeywords;
+}
+
+<!-- Start Page Title area-->
+<div class="page-title-area" style="background-image: url(@Data.Banner);">
+    <div class="container">
+        <div class="content text-center">
+            <h1 class="title_banner">@Data.TitleBanner</h1>
+            <ul class="list-unstyled">
+                <li class="d-inline"><a href="">Trang chủ</a></li>
+                <li class="d-inline">/</li>
+                <li class="d-inline active">@Data.Title</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- End Page Title area -->
+    
+<!-- Start Contact Area -->
+<div id="contact" class="contact-area contact-6 pt-120 pb-90">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-sm-6">
+                <div class="item-single mb-30">
+                    <div class="icon">
+                        <i class="fal fa-phone-plus"></i>
+                    </div>
+                    <div class="text">
+                        <p><a href="tel:@Data.Phones.PhoneOne">@Data.Phones.PhoneOne</a></p>
+                        <p><a href="tel:@Data.Phones.PhoneTwo">@Data.Phones.PhoneTwo</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <div class="item-single mb-30">
+                    <div class="icon">
+                        <i class="fal fa-envelope"></i>
+                    </div>
+                    <div class="text">
+                        <p><a href="mailTo:@Data.Emails.EmailOne">@Data.Emails.EmailOne</a></p>
+                        <p><a href="mailTo:@Data.Emails.EmailTwo">@Data.Emails.EmailTwo</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <div class="item-single mb-50">
+                    <div class="icon">
+                        <i class="fal fa-map-marker-alt"></i>
+                    </div>
+                    <div class="text">
+                        <p>@Data.Address</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 mb-30">
+                <form id="contactForm" action="?contact" method="post">
+                    @AntiForgery.GetHtml()
+                    <fieldset>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-30">
+                                    <input type="text" name="name" class="form-control" id="name" required placeholder="Họ và tên*" />
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group mb-30">
+                                    <input type="email" name="email" class="form-control" id="email" required placeholder="Email*" />
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group mb-30">
+                                    <input type="text" name="phone" class="form-control" id="phone" required placeholder="Số điện thoại*" />
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group mb-30">
+                                    <textarea name="message" id="message" class="form-control" cols="30" rows="8" required placeholder="Lời nhắn..."></textarea>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 text-center">
+                                <button type="submit" class="btn primary-btn primary-btn-5 contact">Gửi bình luận</button>
+                                <div id="msgSubmit"></div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="col-lg-6 mb-30">
+                <iframe src="@Root.Config.Company.Maps" style="border:0;" allowfullscreen="" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Contact Area -->

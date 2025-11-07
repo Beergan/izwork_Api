@@ -1,0 +1,353 @@
+﻿@inherits MyWebPage
+@using SLK.Common
+@functions {
+    [Component(
+        Type = ComptType.Page_Template,
+        ComptName = "en:Page about template|vi:Mẫu trang giới thiệu")]
+
+    public class ViewModel
+    {
+        public IDictionary<string, string> Phrases { get; set; } = new Dictionary<string, string>();
+
+        public KeyValuePair<string, string>[] Breadcrumbs { get; set; }
+
+        public string Title { get; set; }
+
+        public string MetaDescription { get; set; }
+
+        public string MetaKeywords { get; set; }
+
+        public class Banner
+        {
+            [Field(
+                Title = "en:Title|vi:Tiêu đề",
+                Required = false,
+                Control = InputControlType.TextBox)]
+            public string Title { get; set; }
+
+            [Field(
+                Title = "en:Ảnh bìa|vi:Ảnh bìa",
+                Required = false,
+                Control = InputControlType.Image)]
+            public string Image { get; set; }
+        }
+
+        [Field(Title = "Banner")]
+        public Banner banner { get; set; }
+
+        public class Testimonial
+        {
+            [Field(
+                Title = "en:Title|vi:Tiêu đề",
+                Required = false,
+                Control = InputControlType.TextBox)]
+            public string Title { get; set; }
+
+            public class TestiWrap
+            {
+                [Field(
+                    Title = "en:Name|vi:Họ tên",
+                    Required = false,
+                    Control = InputControlType.TextBox)]
+                public string Title { get; set; }
+
+                [Field(
+                   Title = "en:description|vi:Mô tả",
+                   Required = false,
+                   Control = InputControlType.TextArea)]
+                public string Desc { get; set; }
+
+                [Field(
+                   Title = "en:Star|vi:Đánh sao",
+                   Required = false,
+                   Control = InputControlType.Combobox,
+                   Options = new string[] { "1", "2", "3", "4", "5" })]
+                public int Stars { get; set; }
+
+                [Field(
+                   Title = "en:Avarta|vi:Hình đại diện",
+                   Required = false,
+                   Control = InputControlType.Image)]
+                public string Image { get; set; }
+            }
+
+            [Field(Title = "Các lời chứng thực")]
+            public TestiWrap[] testiWrap { get; set; }
+        }
+
+        [Field(Title = "Lời chứng thực")]
+        public Testimonial testimonial { get; set; }
+
+        public class Application
+        {
+            [Field(
+                Title = "en:Sub title|vi:Tiêu đề phụ",
+                Required = false,
+                Control = InputControlType.TextBox)]
+            public string SubTitle { get; set; }
+
+            [Field(
+                Title = "en:Title|vi:Tiêu đề",
+                Required = false,
+                Control = InputControlType.TextBox)]
+            public string Title { get; set; }
+
+            [Field(
+                Title = "en:Description|vi:Mô tả",
+                Required = false,
+                Control = InputControlType.TextArea)]
+            public string Desc { get; set; }
+
+            [Field(
+                Title = "en:Image|vi:Hình",
+                Required = false,
+                Control = InputControlType.Image)]
+            public string Image { get; set; }
+
+            public class Content
+            {
+                [Field(
+                    Title = "en:Title|vi:Tiêu đề",
+                    Required = false,
+                    Control = InputControlType.TextBox)]
+                public string Title { get; set; }
+
+                [Field(
+                    Title = "en:Description|vi:Mô tả",
+                    Required = false,
+                    Control = InputControlType.TextArea)]
+                public string Desc { get; set; }
+
+                [Field(
+                    Title = "en:Icon|vi:Icon",
+                    Required = false,
+                    Control = InputControlType.TextArea)]
+                public string Icon { get; set; }
+            }
+
+            [Field(Title = "Các nội dung")]
+            public Content[] Contents { get; set; }
+        }
+
+        [Field(Title = "Ứng dụng")]
+        public Application[] Applications { get; set; }
+
+        public static ViewModel Default => new ViewModel()
+        {
+            Title = "Giới thiệu",
+            banner = new Banner
+            {
+                Title = "Giới thiệu",
+                Image = "https://themeforest.kreativdev.com/samu/demo/assets/images/page-title-bg.png",
+            },
+            testimonial = new Testimonial
+            {
+                Title = "400.000 người dùng trên khắp thế giới, yêu chúng tôi với sự tin tưởng lớn",
+                testiWrap = new Testimonial.TestiWrap[]
+            {
+                    new Testimonial.TestiWrap
+                    {
+                        Title = "Trần Anh Huy",
+                        Desc = " Nhóm của họ đã lãnh đạo, mở rộng quy mô và cung cấp các dự án thiết kế và phần mềm quy mô lớn tại nhiều công ty khởi nghiệp và môi trường tăng trưởng cao ",
+                        Image = "https://themeforest.kreativdev.com/samu/demo/assets/images/client/client-1.jpg",
+                        Stars = 3
+                    },
+                    new Testimonial.TestiWrap
+                    {
+                        Title = "Huỳnh Nhất Duy",
+                        Desc = " Nhóm của họ đã lãnh đạo, mở rộng quy mô và cung cấp các dự án thiết kế và phần mềm quy mô lớn tại nhiều công ty khởi nghiệp và môi trường tăng trưởng cao ",
+                        Image = "https://themeforest.kreativdev.com/samu/demo/assets/images/client/client-1.jpg",
+                        Stars = 4
+                    },
+                    new Testimonial.TestiWrap
+                    {
+                        Title = "Lê Văn Tài",
+                        Desc = " Nhóm của họ đã lãnh đạo, mở rộng quy mô và cung cấp các dự án thiết kế và phần mềm quy mô lớn tại nhiều công ty khởi nghiệp và môi trường tăng trưởng cao ",
+                        Image = "https://themeforest.kreativdev.com/samu/demo/assets/images/client/client-1.jpg",
+                        Stars = 5
+                    }
+            }
+            },
+            Applications = new Application[]
+            {
+                new Application
+                {
+                    Title = "Được tối ưu hóa cho tốc độ",
+                    SubTitle = "Tại Sao Chọn Cái Này",
+                    Desc = "Chúng tôi tạo ra phần mềm thiết kế tùy chỉnh cho các doanh nghiệp thuộc mọi quy mô. Phần mềm của chúng tôi sẽ giúp bạn đưa doanh nghiệp của bạn.",
+                    Image = "https://themeforest.kreativdev.com/samu/demo/assets/images/choose.png",
+                    Contents = new Application.Content[]
+                    {
+                        new Application.Content
+                        {
+                            Title = "Danh sách &bảng",
+                            Desc = "Để giúp cải thiện cá nhân và năng suất của bạn, Samu liên kết với các công cụ của bạn.",
+                            Icon = "fal fa-columns"
+                        },
+                        new Application.Content
+                        {
+                            Title = "Nhiều đội",
+                            Desc = "Để giúp cải thiện cá nhân và năng suất của bạn, Samu liên kết với các công cụ của bạn.",
+                            Icon = "fal fa-columns"
+                        },
+                        new Application.Content
+                        {
+                            Title = "Không tải trang",
+                            Desc = "Để giúp cải thiện cá nhân và năng suất của bạn, Samu liên kết với các công cụ của bạn.",
+                            Icon = "fal fa-columns"
+                        }
+                    }
+                },
+                new Application
+                {
+                    Title = "Được tối ưu hóa cho tốc độ",
+                    SubTitle = "Tại Sao Chọn Cái Này",
+                    Desc = "Chúng tôi tạo ra phần mềm thiết kế tùy chỉnh cho các doanh nghiệp thuộc mọi quy mô. Phần mềm của chúng tôi sẽ giúp bạn đưa doanh nghiệp của bạn.",
+                    Image = "https://themeforest.kreativdev.com/samu/demo/assets/images/choose.png",
+                    Contents = new Application.Content[]
+                    {
+                        new Application.Content
+                        {
+                            Title = "Danh sách &bảng",
+                            Desc = "Để giúp cải thiện cá nhân và năng suất của bạn, Samu liên kết với các công cụ của bạn.",
+                            Icon = "fal fa-columns"
+                        },
+                        new Application.Content
+                        {
+                            Title = "Nhiều đội",
+                            Desc = "Để giúp cải thiện cá nhân và năng suất của bạn, Samu liên kết với các công cụ của bạn.",
+                            Icon = "fal fa-columns"
+                        },
+                        new Application.Content
+                        {
+                            Title = "Không tải trang",
+                            Desc = "Để giúp cải thiện cá nhân và năng suất của bạn, Samu liên kết với các công cụ của bạn.",
+                            Icon = "fal fa-columns"
+                        }
+                    }
+                }
+            }
+        };
+    }/*end_viewmodel*/
+    private ViewModel _data;
+    private ViewModel Data => _data ?? (_data = ViewModel.Default);
+    private MyTranslator Text => new MyTranslator(Data?.Phrases);
+}
+@{
+    _data = LoadData<ViewModel>(key: $"{LangId}-{FileName}#{NodeSlug}", setup: (model) =>
+    {
+        model = model ?? ViewModel.Default;
+
+        var page = Db.GetOne<PP_Page>(PageId);
+
+        if (page == null)
+        {
+            return model;
+        }
+
+        model.Title = page.Title;
+        model.MetaDescription = page.MetaDescription;
+        model.MetaKeywords = page.MetaKeywords;
+        return model;
+    });
+
+    Layout = $"~/_layouts/_layout.cshtml";
+    Page.Title = Data.Title;
+    Page.Description = Data.MetaDescription;
+    Page.Keywords = Data.MetaKeywords;
+}
+<!-- Start Page Title area-->
+<div class="page-title-area" style="background-image:url(@Data.banner.Image)">
+    <div class="container">
+        <div class="content text-center">
+            <h1 class="title_banner">@Data.banner.Title</h1>
+            <ul class="list-unstyled">
+                <li class="d-inline"><a href="/">Trang chủ</a></li>
+                <li class="d-inline">/</li>
+                <li class="d-inline active">@Data.Title</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- End Page Title area -->
+    
+<!-- Start Testimonial Area -->
+<section id="testimonial" class="testimonial-area ptb-120">
+    <div class="container">
+        <div class="section-title">
+            <h2 class="title">@Data.testimonial.Title</h2>
+        </div>
+        <div class="testimonial-slider owl-carousel">
+            @foreach (var item in Data.testimonial.testiWrap.EmptyIfNull())
+            {
+                <div class="slider-item">
+                    <div class="image">
+                        <div class="lazy-container aspect-ratio aspect-ratio-1-1">
+                            <img class="lazyload lazy-image" src="@item.Image" data-src="@item.Image" alt="image">
+                        </div>
+                    </div>
+                    <div class="content">
+                        <p class="text">
+                            @item.Desc
+                        </p>
+                        <div class="review yellow">
+                            @for (int i = 0; i < item.Stars; i++)
+                            {
+                                <i class="fas fa-star"></i>
+                            }
+                        </div>
+                        <h3 class="name">@item.Title</h3>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<!-- End Testimonial Area -->
+
+<!-- Start Choose Area -->
+@foreach (var item in Data.Applications.EmptyIfNull())
+{
+    <section id="choose" class="choose-area pb-90">
+        <div class="container">
+            <div class="row align-items-center gx-xl-5">
+                <div class="col-lg-5">
+                    <div class="section-title">
+                        <span class="tag">@item.SubTitle</span>
+                        <h2 class="title">@item.Title</h2>
+                        <p>@item.Desc</p>
+                    </div>
+                    <div class="row justify-content-center">
+                        @foreach (var con in item.Contents.EmptyIfNull())
+                        {
+                            <div class="col-md-12 col-sm-6">
+                                <div class="item-single mb-30">
+                                    <div class="icon blue bg-blue">
+                                        <i class="@con.Icon"></i>
+                                    </div>
+                                    <div class="content">
+                                        <h3>@con.Title</h3>
+                                        <p>@con.Desc</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="image image-right mb-30">
+                        <div class="lazy-container aspect-ratio aspect-ratio-4-3">
+                            <img class="lazyload lazy-image" src="assets/images/placeholder.png" data-src="@item.Image" alt="image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+
+
+
+<!-- End Choose ARea -->
+

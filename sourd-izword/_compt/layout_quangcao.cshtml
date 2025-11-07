@@ -1,0 +1,54 @@
+﻿@inherits MyWebPage
+@using SLK.Common
+@functions {
+    [Component(Type = ComptType.Page_Element,
+        ComptName = "en:Lightbox component|vi:Hộp quảng cáo")]
+    public class ViewModel
+    {
+        public IDictionary<string, string> Phrases { get; set; } = new Dictionary<string, string>();
+
+        [Field(Title = "Bật tắt", Control = InputControlType.CheckBox)]
+        public bool Enabled { get; set; }
+
+        [Field(Title = "Nội dung quảng cáo", Control = InputControlType.RichTextBox)]
+        public string Html { get; set; }
+
+        [Field(Title = "Phiên bản", Control = InputControlType.TextBox)]
+        public string Version { get; set; }
+
+        public static ViewModel Default => new ViewModel()
+        {
+
+        };
+
+    }/*end_viewmodel*/
+    private ViewModel _data;
+    private ViewModel Data => _data ?? (_data = ViewModel.Default);
+    private MyTranslator Text => new MyTranslator(Data?.Phrases);
+}
+@{
+    _data = LoadData<ViewModel>(key: $"{LangId}-{FileName}");
+    Layout = IsDirectCall ? "~/_layouts/_empty.cshtml" : null;
+
+    var cklightbox = Request.Cookies.Get("ck_lightbox");
+    bool newVersion = cklightbox == null || cklightbox.Value != Data.Version;
+    bool lightBoxEnabled = Data.Enabled && (Page.IndexPageRunning ?? false);
+}
+
+@if (lightBoxEnabled)
+{
+    <div class="lightbox modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <button type="button" class="closeads" data-version="@Data.Version" data-dismiss="modal" aria-hidden="true">
+                <svg viewBox="0 0 384 512" style="display: block; height: 22px; width: 22px">
+                    <path d="M231.6 256l130.1-130.1c4.7-4.7 4.7-12.3 0-17l-22.6-22.6c-4.7-4.7-12.3-4.7-17 0L192 216.4 61.9 86.3c-4.7-4.7-12.3-4.7-17 0l-22.6 22.6c-4.7 4.7-4.7 12.3 0 17L152.4 256 22.3 386.1c-4.7 4.7-4.7 12.3 0 17l22.6 22.6c4.7 4.7 12.3 4.7 17 0L192 295.6l130.1 130.1c4.7 4.7 12.3 4.7 17 0l22.6-22.6c4.7-4.7 4.7-12.3 0-17L231.6 256z"></path>
+                </svg>
+            </button>
+            <div class="modal-content">
+                <div class="modal-body" style="padding: 0px !important">
+                    @Data.Html
+                </div>
+            </div>
+        </div>
+    </div>
+}

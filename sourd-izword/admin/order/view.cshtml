@@ -1,0 +1,48 @@
+﻿@inherits MyAdminPage
+@{
+    CheckAuthen()();
+    var field = new FieldExtractor<PP_Order>();
+    var query = Request.Url.Query;
+
+    string orderCode = Request.QueryString[nameof(orderCode)] ?? Request.Form[nameof(orderCode)];
+    var order = Db.GetOne<PP_Order>(t => t.OrderCode == orderCode);
+    var lines = Json.Decode<List<OrderLine>>(order.JsonData);
+
+    Layout = null;
+}
+<table class="table">
+    <tr>
+        <td>Mã đơn hàng/Tình trạng</td>
+        <td>@order.OrderCode/@order.OrderStatus</td>
+    </tr>
+    <tr>
+        <td>Tên/Số điện thoại</td>
+        <td>@order.Name/@order.Phone</td>
+    </tr>
+    <tr>
+        <td>Ghi chú</td>
+        <td>@order.Note</td>
+    </tr>
+    <tr>
+        <td>Phí ship/Tổng cộng</td>
+        <td>@($"{order.ShipFee:C0}")/@($"{order.TotalAmount:C0}")</td>
+    </tr>
+</table>
+<table class="table">
+    <tr>
+        <th>Sản phẩm</th>
+        <td align="right">Giá</td>
+        <td align="right">Số lượng</td>
+        <td align="right">Tiền hàng</td>
+    </tr>
+
+    @foreach (var line in lines)
+    {
+        <tr>
+            <td>@line.Title</td>
+            <td align="right">@($"{line.Price:C0}")</td>
+            <td align="right">@line.Quantity</td>
+            <td align="right">@($"{line.RowTotal:C0}")</td>
+        </tr>
+    }
+</table>

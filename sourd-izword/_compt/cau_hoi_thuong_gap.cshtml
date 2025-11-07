@@ -1,0 +1,105 @@
+﻿@inherits MyWebPage
+@using SLK.Common
+@functions {
+    [Component(
+        Type = ComptType.Page_Template,
+        ComptName = "en:Page faq template|vi:Mẫu trang câu hỏi thường gặp")]
+
+    public class ViewModel
+    {
+        public IDictionary<string, string> Phrases { get; set; } = new Dictionary<string, string>();
+
+        public string Title { get; set; }
+
+        public string MetaDescription { get; set; }
+
+        public string MetaKeywords { get; set; }
+
+        [Field(
+           Title = "en:Title banner|vi:Tiêu đề banner",
+           Required = false,
+           Control = InputControlType.TextBox)]
+        public string TitleBanner { get; set; }
+
+        [Field(
+           Title = "en:Banner|vi:Banner",
+           Required = false,
+           Control = InputControlType.Image)]
+        public string Banner { get; set; }
+
+        [Field(Title = "Danh sách câu hỏi")]
+        public VM_FAQ[] ItemFaq { get; set; }
+
+        public static ViewModel Default => new ViewModel()
+        {
+
+        };
+    }/*end_viewmodel*/
+    private ViewModel _data;
+    private ViewModel Data => _data ?? (_data = ViewModel.Default);
+    private MyTranslator Text => new MyTranslator(Data?.Phrases);
+}
+@{
+    _data = LoadData<ViewModel>(key: $"{LangId}-{FileName}#{NodeSlug}", setup: (model) =>
+    {
+        model = model ?? new ViewModel();
+
+        var page = Db.GetOne<PP_Page>(PageId);
+        if (page == null) return null;
+
+        model.Title = page.Title;
+        model.MetaDescription = page.MetaDescription;
+        model.MetaKeywords = page.MetaKeywords;
+
+        return model;
+    });
+
+    Layout = $"~/_layouts/_layout.cshtml";
+    Page.Title = Data.Title;
+    Page.Description = Data.MetaDescription;
+    Page.Keywords = Data.MetaKeywords;
+}
+<!-- Start Page Title area-->
+<div class="page-title-area" style="background-image: url(@Data.Banner)">
+    <div class="container">
+        <div class="content text-center">
+            <h1 class="title_banner">@Data.TitleBanner</h1>
+            <ul class="list-unstyled">
+                <li class="d-inline"><a href="/">Trang chủ</a></li>
+                <li class="d-inline">/</li>
+                <li class="d-inline">@Data.Title</li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- End Page Title area -->
+    
+<!-- Start Faq Area -->
+<div id="faq" class="faq-area faq-3 pt-120 pb-90">
+    <div class="container">
+        <div class="accordion" id="faqAccordion">
+            <div class="row">
+                @foreach (var item in Data.ItemFaq.EmptyIfNull().Select((x, y) => new { x, y }))
+                {
+                 
+                    <div class="col-lg-6 col-12">
+                        <div class="accordion-item">
+                            <h6 class="accordion-header" id="heading">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#@ToneRemoverTab.MakeSlug(item.x.Question)" aria-expanded="true" aria-controls="@ToneRemoverTab.MakeSlug(item.x.Question)">
+                                    @item.x.Question
+                                </button>
+                            </h6>
+                            <div id="@ToneRemoverTab.MakeSlug(item.x.Question)" class="accordion-collapse collapse @(item.y  == 0 ? "show" : "")" aria-labelledby="heading" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    <p>@item.x.Answer</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }               
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Faq Area -->

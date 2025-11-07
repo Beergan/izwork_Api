@@ -1,0 +1,1161 @@
+﻿@inherits MyWebPage
+@using SLK.Common
+@functions {
+    [Component(
+        Type = ComptType.Page_Template,
+        ComptName = "en:Page home template|vi:Mẫu trang chủ")]
+
+    public class ViewModel
+    {
+        public IDictionary<string, string> Phrases { get; set; } = new Dictionary<string, string>();
+
+        public string Title { get; set; }
+
+        public string MetaDescription { get; set; }
+
+        public string MetaKeywords { get; set; }
+
+        public class Banner
+        {
+            [Field(
+                Title = "en:Tiêu đề|vi:Tiêu đề",
+                Required = false,
+                Control = InputControlType.TextBox)]
+            public string Title { get; set; }
+
+            [Field(
+                Title = "en:Mô tả|vi:Mô tả",
+                Required = false,
+                Control = InputControlType.TextBox)]
+            public string Desc { get; set; }
+
+            [Field(
+                Title = "en:Ảnh phần mềm|vi:Ảnh phần mềm",
+                Required = false,
+                Control = InputControlType.Image)]
+            public string SoftwareImage { get; set; }
+
+            [Field(
+                Title = "en:Ảnh 01|vi:Ảnh 01",
+                Required = false,
+                Control = InputControlType.Image)]
+            public string ImageOne { get; set; }
+
+            [Field(
+                Title = "en:Ảnh 02|vi:Ảnh 02",
+                Required = false,
+                Control = InputControlType.Image)]
+            public string ImageTwo { get; set; }
+        }
+
+        public class Partner
+        {
+            [Field(
+                Title = "en:Logo|vi:Logo",
+                Required = false,
+                Control = InputControlType.Image)]
+            public string Logo { get; set; }
+
+            [Field(
+                Title = "en:Đường dẫn|vi:Đường dẫn",
+                Required = false,
+                Control = InputControlType.TextBox)]
+            public string Href { get; set; }
+        }
+
+        public class Feature
+        {
+            [Field(
+                Title = "en:Tiêu đề phụ|vi:Tiêu đề phụ",
+                Required = false,
+                Control = InputControlType.TextBox)]
+            public string SubTitle { get; set; }
+
+            [Field(
+               Title = "en:Tiêu đề|vi:Tiêu đề",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string Title { get; set; }
+
+            [Field(
+               Title = "en:Mô tả|vi:Mô tả",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string Desc { get; set; }
+
+            [Field(Title = "Các đặc trưng")]
+            public ListFeature[] ListFeatures { get; set; }
+        }
+
+        public class ListFeature
+        {
+            [Field(
+               Title = "en:Icon|vi:Icon",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string Icon { get; set; }
+
+            [Field(
+               Title = "en:Tiêu đề|vi:Tiêu đề",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string Title { get; set; }
+
+            [Field(
+               Title = "en:Mô tả|vi:Mô tả",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string Desc { get; set; }
+        }
+
+        public class Overview
+        {
+            [Field(
+               Title = "en:Ảnh|vi:Ảnh",
+               Required = false,
+               Control = InputControlType.Image)]
+            public string Image { get; set; }
+
+            [Field(
+               Title = "en:Tiêu đề phụ|vi:Tiêu đề phụ",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string SubTitle { get; set; }
+
+            [Field(
+               Title = "en:Tiêu đề|vi:Tiêu đề",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string Title { get; set; }
+
+            [Field(
+               Title = "en:Mô tả|vi:Mô tả",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string Desc { get; set; }
+        }
+
+        public class Video
+        {
+            [Field(
+               Title = "en:Ảnh|vi:Ảnh",
+               Required = false,
+               Control = InputControlType.Image)]
+            public string Image { get; set; }
+
+            [Field(
+               Title = "en:Video|vi:Video",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string HrefVideo { get; set; }
+        }
+
+        public class Application
+        {
+            [Field(
+               Title = "en:Banner|vi:Banner",
+               Required = false,
+               Control = InputControlType.Image)]
+            public string Banner { get; set; }
+
+            [Field(
+               Title = "en:Ảnh|vi:Ảnh",
+               Required = false,
+               Control = InputControlType.Image)]
+            public string Image { get; set; }
+
+            [Field(
+               Title = "en:Tiêu đề phụ|vi:Tiêu đề phụ",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string SubTitle { get; set; }
+
+            [Field(
+               Title = "en:Tiêu đề|vi:Tiêu đề",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string Title { get; set; }
+
+            [Field(
+               Title = "en:Mô tả|vi:Mô tả",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string Desc { get; set; }
+
+            [Field(Title = "Các ứng dụng")]
+            public ListApplication ListApplications { get; set; }
+        }
+
+        public class ListApplication
+        {
+            [Field(
+               Title = "en:Icon 01|vi:Icon 01",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string IconOne { get; set; }
+
+            [Field(
+               Title = "en:Tiêu đề 01|vi:Tiêu đề 01",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string TitleOne { get; set; }
+
+            [Field(
+               Title = "en:Mô tả 01|vi:Mô tả 01",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string DescOne { get; set; }
+
+            [Field(
+               Title = "en:Icon 02|vi:Icon 02",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string IconTwo { get; set; }
+
+            [Field(
+               Title = "en:Tiêu đề 02|vi:Tiêu đề 02",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string TitleTwo { get; set; }
+
+            [Field(
+               Title = "en:Mô tả 02|vi:Mô tả 02",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string DescTwo { get; set; }
+
+            [Field(
+               Title = "en:Icon 03|vi:Icon 03",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string IconThree { get; set; }
+
+            [Field(
+               Title = "en:Tiêu đề 03|vi:Tiêu đề 03",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string TitleThree { get; set; }
+
+            [Field(
+               Title = "en:Mô tả 03|vi:Mô tả 03",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string DescThree { get; set; }
+        }
+
+        public class Statistical
+        {
+            [Field(
+               Title = "en:Thông số|vi:Thông số",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string Parameter { get; set; }
+
+            [Field(
+              Title = "en:Tiêu đề|vi:Tiêu đề",
+              Required = false,
+              Control = InputControlType.TextBox)]
+            public string Title { get; set; }
+        }
+
+        public class Testimonial
+        {
+            [Field(
+               Title = "en:Tiêu đề|vi:Tiêu đề",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string Title { get; set; }
+
+            [Field(Title = "Danh sách giới thiệu")]
+            public ListTestimonial[] ItemTestimonial { get; set; }
+        }
+
+        public class ListTestimonial
+        {
+            [Field(
+               Title = "en:Ảnh|vi:Ảnh",
+               Required = false,
+               Control = InputControlType.Image)]
+            public string Image { get; set; }
+
+            [Field(
+               Title = "en:Mô tả|vi:Mô tả",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string Desc { get; set; }
+
+            [Field(
+               Title = "en:Tên|vi:Tên",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string Name { get; set; }
+        }
+
+        public class Price
+        {
+            [Field(
+               Title = "en:Tiêu đề|vi:Tiêu đề",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string Title { get; set; }
+
+            [Field(
+               Title = "en:Mô tả|vi:Mô tả",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string Desc { get; set; }
+
+            [Field(Title = "Danh sách giá")]
+            public ListPrice[] ItemPrice { get; set; }
+        }
+
+        public class ListPrice
+        {
+            [Field(
+               Title = "en:Tiêu đề|vi:Tiêu đề",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string Title { get; set; }
+
+            [Field(
+               Title = "en:Giá|vi:Giá",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string Price { get; set; }
+
+            [Field(
+               Title = "en:Thời hạn|vi:Thời hạn",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string TimeOut { get; set; }
+
+            [Field(
+               Title = "en:Mô tả|vi:Mô tả",
+               Required = false,
+               Control = InputControlType.RichTextBox)]
+            public string Desc { get; set; }
+        }
+
+        public class Trial
+        {
+            [Field(
+               Title = "en:Tiêu đề|vi:Tiêu đề",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string Title { get; set; }
+
+            [Field(
+               Title = "en:Ảnh|vi:Ảnh",
+               Required = false,
+               Control = InputControlType.Image)]
+            public string Image { get; set; }
+        }
+
+        public class Blog
+        {
+            [Field(
+              Title = "en:Chuyên mục tin tức|vi:Chuyên mục tin tức",
+              Required = false,
+              Control = InputControlType.Link)]
+            public string CategoryBlogLink { get; set; }
+
+            [Field(
+              Title = "en:Tiêu đề phụ|vi:Tiêu đề phụ",
+              Required = false,
+              Control = InputControlType.TextBox)]
+            public string SubTitle { get; set; }
+
+            [Field(
+              Title = "en:Tiêu đề|vi:Tiêu đề",
+              Required = false,
+              Control = InputControlType.TextBox)]
+            public string Title { get; set; }
+        }
+
+        public class Question
+        {
+            [Field(
+              Title = "en:Tiêu đề phụ|vi:Tiêu đề phụ",
+              Required = false,
+              Control = InputControlType.TextBox)]
+            public string SubTitle { get; set; }
+
+            [Field(
+              Title = "en:Tiêu đề|vi:Tiêu đề",
+              Required = false,
+              Control = InputControlType.TextBox)]
+            public string Title { get; set; }
+
+            [Field(
+              Title = "en:Ảnh|vi:Ảnh",
+              Required = false,
+              Control = InputControlType.Image)]
+            public string Image { get; set; }
+
+            [Field(Title = "Danh sách các câu hỏi")]
+            public VM_FAQ[] Faq { get; set; }
+        }
+
+        public class Contact
+        {
+            [Field(
+               Title = "en:Tiêu đề|vi:Tiêu đề",
+               Required = false,
+               Control = InputControlType.TextBox)]
+            public string Title { get; set; }
+
+            [Field(
+               Title = "en:Mô tả|vi:Mô tả",
+               Required = false,
+               Control = InputControlType.TextArea)]
+            public string Desc { get; set; }
+        }
+
+        [Field(Title = "Banner")]
+        public Banner Banners { get; set; }
+
+        [Field(Title = "Đối tác")]
+        public Partner[] Partners { get; set; }
+
+        [Field(Title = "Đặc trưng")]
+        public Feature Features { get; set; }
+
+        [Field(Title = "Tổng quan")]
+        public Overview Overviews { get; set; }
+
+        [Field(Title = "Video")]
+        public Video Videos { get; set; }
+
+        [Field(Title = "Ứng dụng")]
+        public Application Applications { get; set; }
+
+        [Field(Title = "Thống kê")]
+        public Statistical[] Statisticals { get; set; }
+
+        [Field(Title = "Giới thiệu")]
+        public Testimonial Testimonials { get; set; }
+
+        [Field(Title = "Bảng giá")]
+        public Price Prices { get; set; }
+
+        [Field(Title = "Dùng thử")]
+        public Trial Trials { get; set; }
+
+        [Field(Title = "Tin tức")]
+        public Blog Blogs { get; set; }
+
+        [Field(Title = "Câu hỏi")]
+        public Question Questions { get; set; }
+
+        [Field(Title = "Liên hệ")]
+        public Contact contact { get; set; }
+
+        public VM_Blog[] ItemBlog { get; set; }
+
+        public static ViewModel Default => new ViewModel()
+        {
+            Title = "Trang chủ",
+            Banners = new Banner
+            {
+                Title = "Customize your Experience",
+                Desc = "Samu lets you manage software development and track bugs. Samu streamlined design is built for speed.",
+                SoftwareImage = "https://themeforest.kreativdev.com/samu/demo/assets/images/banner/banner-2.png",
+                ImageOne = "https://themeforest.kreativdev.com/samu/demo/assets/images/banner/banner-bg-2.png",
+                ImageTwo = "https://themeforest.kreativdev.com/samu/demo/assets/images/banner/circle-bg.png",
+            },
+            Partners = new Partner[]
+{
+                new Partner
+                {
+                    Logo = "https://themeforest.kreativdev.com/samu/demo/assets/images/sponsor-1.png",
+                    Href = "#"
+                },
+                new Partner
+                {
+                    Logo = "https://themeforest.kreativdev.com/samu/demo/assets/images/sponsor-1.png",
+                    Href = "#"
+                },
+                new Partner
+                {
+                    Logo = "https://themeforest.kreativdev.com/samu/demo/assets/images/sponsor-1.png",
+                    Href = "#"
+                },
+                new Partner
+                {
+                    Logo = "https://themeforest.kreativdev.com/samu/demo/assets/images/sponsor-1.png",
+                    Href = "#"
+                }
+},
+            Features = new Feature
+            {
+                SubTitle = "Software Features",
+                Title = "Stunning with lots of features",
+                Desc = "Samu lets you manage software development and track bugs. Samu's streamlined design is built for speed and efficiency helping high performing team.",
+                ListFeatures = new ListFeature[]
+{
+                    new ListFeature
+                    {
+                        Icon = "fal fa-laptop",
+                        Title = "Fully Optimized",
+                        Desc = "To help improve your personal and your team's productivity Samu ties into your existing tools."
+                    },
+                    new ListFeature
+                    {
+                        Icon = "fal fa-th-list",
+                        Title = "List & Board",
+                        Desc = "To help improve your personal and your team's productivity Samu ties into your existing tools."
+                    },
+                    new ListFeature
+                    {
+                        Icon = "fal fa-users",
+                        Title = "Multiple Teams",
+                        Desc = "To help improve your personal and your team's productivity Samu ties into your existing tools."
+                    }
+}
+            },
+            Overviews = new Overview
+            {
+                Image = "https://themeforest.kreativdev.com/samu/demo/assets/images/overview-2.png",
+                SubTitle = "Help You Achieve More",
+                Title = "Its real-time sync architecture makes it blazing fast",
+                Desc = "We are a software company that provides innovative and effective software solutions to help our clients achieve their business goals. We believe in using the latest technology to provide our clients with the best possible service, and we are always looking for new ways to improve our clients dream make true."
+            },
+            Videos = new Video
+            {
+                Image = "https://themeforest.kreativdev.com/samu/demo/assets/images/video-bg.jpg",
+                HrefVideo = "https://www.youtube.com/watch?v=QSwvg9Rv2EI"
+            },
+            Applications = new Application
+            {
+                SubTitle = "Why Choose This",
+                Title = "Optimized for speed",
+                Desc = "We create custom design software for businesses of all sizes. Our software will help you take your business.",
+                Image = "https://themeforest.kreativdev.com/samu/demo/assets/images/choose.png",
+                Banner = "https://themeforest.kreativdev.com/samu/demo/assets/images/choose-bg.png",
+                ListApplications = new ListApplication
+                {
+                    IconOne = "fal fa-columns",
+                    TitleOne = "List & Board",
+                    DescOne = "To help improve your personal and your productivity Samu ties into your tools.",
+                    IconTwo = "fal fa-comments",
+                    TitleTwo = "Multiple Teams",
+                    DescTwo = "To help improve your personal and your productivity Samu ties into your tools.",
+                    IconThree = "fal fa-sync-alt",
+                    TitleThree = "No Page Loads",
+                    DescThree = "To help improve your personal and your productivity Samu ties into your tools."
+                }
+            },
+            Statisticals = new Statistical[]
+{
+                new Statistical
+                {
+                    Parameter = "2M+",
+                    Title = "Total Downloads"
+                },
+                new Statistical
+                {
+                    Parameter = "43K+",
+                    Title = "Positive Reviews"
+                },
+                new Statistical
+                {
+                    Parameter = "13K+",
+                    Title = "Happy Users"
+                }
+},
+            Testimonials = new Testimonial
+            {
+                Title = "400,000 users around the world, love us with great trust",
+                ItemTestimonial = new ListTestimonial[]
+    {
+                    new ListTestimonial
+                    {
+                        Image = "https://themeforest.kreativdev.com/samu/demo/assets/images/client/client-4.jpg",
+                        Desc = "Their team has led, scaled and delivered large scale software and design projects at multiple startups and high-growth environments",
+                        Name = "Maria Holder"
+                    },
+                    new ListTestimonial
+                    {
+                        Image = "https://themeforest.kreativdev.com/samu/demo/assets/images/client/client-5.jpg",
+                        Desc = "Their team has led, scaled and delivered large scale software and design projects at multiple startups and high-growth environments",
+                        Name = "Arnold Henry"
+                    },
+                    new ListTestimonial
+                    {
+                        Image = "https://themeforest.kreativdev.com/samu/demo/assets/images/client/client-6.jpg",
+                        Desc = "Their team has led, scaled and delivered large scale software and design projects at multiple startups and high-growth environments",
+                        Name = "Elisa Mos"
+                    }
+    }
+            },
+            Prices = new Price
+            {
+                Title = "Best pricing plan",
+                Desc = "Samu lets you manage software development and track bugs. Samu's streamlined design is built for speed and efficiency helping high performing team.",
+                ItemPrice = new ListPrice[]
+        {
+                    new ListPrice
+                    {
+                        Title = "Free",
+                        Price = "$0",
+                        TimeOut = "tháng",
+                        Desc = "Đang cập nhật..."
+                    },
+                    new ListPrice
+                    {
+                        Title = "Business",
+                        Price = "$30",
+                        TimeOut = "tháng",
+                        Desc = "Đang cập nhật..."
+                    },
+                    new ListPrice
+                    {
+                        Title = "Professional",
+                        Price = "$10",
+                        TimeOut = "tháng",
+                        Desc = "Đang cập nhật..."
+                    }
+        }
+            },
+            Trials = new Trial
+            {
+                Title = "07 days free trial for first 200 users.",
+                Image = "https://themeforest.kreativdev.com/samu/demo/assets/images/cta.png"
+            },
+            Blogs = new Blog
+            {
+                Title = "Take a look whats going on",
+                SubTitle = "Latest Blog"
+            },
+            Questions = new Question
+            {
+                SubTitle = "Faqs",
+                Title = "Frequently asked questions",
+                Image = "https://themeforest.kreativdev.com/samu/demo/assets/images/faq.png",
+                Faq = new VM_FAQ[]
+                {
+                    new VM_FAQ
+                    {
+                        Question = "What is Samu?",
+                        Answer = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard."
+                    },
+                    new VM_FAQ
+                    {
+                        Question = "How to purchase Samu?",
+                        Answer = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard."
+                    },
+                    new VM_FAQ
+                    {
+                        Question = "Can I use Samu for free?",
+                        Answer = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard."
+                    },
+                    new VM_FAQ
+                    {
+                        Question = "How to use Samu?",
+                        Answer = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard."
+                    }
+                }
+            },
+            contact = new Contact
+            {
+                Title = "Liên hệ",
+                Desc = "Hãy viết nội dung tuyệt vời tại đây"
+            }
+        };
+    }/*end_viewmodel*/
+    private ViewModel _data;
+    private ViewModel Data => _data ?? (_data = ViewModel.Default);
+    private MyTranslator Text => new MyTranslator(Data?.Phrases);
+    private FieldExtractor<PP_Register> field = new FieldExtractor<PP_Register>();
+}
+@{
+    var query = Request.Url.Query;
+
+    if (IsPost && query == "?register")
+    {
+        new Func<Action>(() =>
+        {
+            try
+            {
+                AntiForgery.Validate();
+                string captcha = Request.Form[nameof(captcha)].ToLower();
+
+                Validation.RequireField(field.GetName(t => t.Email));
+                if (!Validation.IsValid())
+                {
+                    return AjaxResult.BadRequest("Vui lòng nhập email của bạn!");
+                }
+
+                Validation.Add(field.GetName(t => t.Email), Validator.Regex("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$"));
+                if (!Validation.IsValid())
+                {
+                    return AjaxResult.BadRequest("Email không hợp lệ!");
+                }
+
+                if (captcha != this.Context.Session["CaptchaVerify"].ToString())
+                {
+                    return AjaxResult.BadRequest("Capcha không hợp lệ!");
+                }
+
+                var model = new PP_Register();
+                model.Status = "NEW";
+                model.Email = Request.Form[field.GetName(t => t.Email)].NullIfWhiteSpace();
+                model.ProcessNote = "Chưa xử lý";
+                Db.Insert<PP_Register>(model);
+
+                Response.Write("Cám ơn bạn đã gửi thông tin, chúng tôi sẽ phản hồi cho bạn sớm nhất có thể!");
+                return () => Response.End();
+            }
+            catch (Exception ex)
+            {
+                return AjaxResult.BadRequest("Đã có lỗi xảy ra!");
+            }
+        })()();
+    }
+
+    _data = LoadData<ViewModel>(key: $"{LangId}-{FileName}#{NodeSlug}", setup: (model) =>
+    {
+        model = model ?? new ViewModel();
+
+        var page = Db.GetOne<PP_Page>(t => t.PathPattern == NodeSlug);
+        if (page == null) return null;
+
+        string BlogPath = model.Blogs.CategoryBlogLink.GetAfter("/");
+        var BlogCate = Db.GetOne<PP_Category>(x => x.CategoryPath == BlogPath);
+        var arrCateBlog = Root.CategoryIndexes[BlogCate.Id].ToList();
+        model.ItemBlog = (from n in Db.Table<PP_Node>()
+                          join cat in Db.Table<PP_Category>() on n.CategoryId equals cat.Id
+                          where n.NodeType == "post" && arrCateBlog.Contains(n.CategoryId ?? 0)
+                          select new VM_Blog
+                          {
+                              Title = n.Title,
+                              Path = n.NodePath,
+                              CreatedTime = n.CreatedTime,
+                              ImageUrl = n.ImageUrl,
+                              JsonContent = n.Content
+                          }).OrderByDescending(x => x.CreatedTime).Take(3).ToArray();
+
+        foreach (var item in model.ItemBlog)
+        {
+            var json = Json.Decode<VM_Blog>(item.JsonContent);
+            if(json != null)
+            {
+                item.Author = json.Author;
+            }
+        }
+
+        return model;
+    });
+
+    Layout = $"~/_layouts/_layout.cshtml";
+    Page.Title = Data.Title;
+    Page.Description = Data.MetaDescription;
+    Page.Keywords = Data.MetaKeywords;
+    Page.IndexPageRunning = true;
+}
+
+<!-- Start Home Banner Area -->
+<div class="home-banner-area banner-bg banner-2">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="banner-content mb-30">
+                    <h1 class="title">@Data.Banners.Title</h1>
+                    <p class="text">@Data.Banners.Desc</p>
+                    <a href="javascript:void(0)" class="btn_register btn primary-btn primary-btn-2">Đăng ký miễn phí</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="banner-image image-right mb-30">
+                    <div class="lazy-container aspect-ratio aspect-ratio-16-11">
+                        <img class="lazyload lazy-image" src="@Data.Banners.SoftwareImage" data-src="@Data.Banners.SoftwareImage" alt="image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bg-shape bg-shape-1">
+        <img src="@Data.Banners.ImageOne" alt="image" >
+    </div>
+    <div class="bg-shape bg-shape-2">
+        <img src="@Data.Banners.ImageTwo" alt="image">
+    </div>
+</div>
+<!-- End Home Banner Area -->
+    
+<!-- Start Sponsor Area -->
+<div id="sponsor" class="sponsor pb-90">
+    <div class="container">
+        <div class="row" style="background: #F7F7FB; border-radius: 40px; padding: 0px 80px;">
+            <div class="col-lg-12" style="background: url(../assets/images/dotted-bg.svg) no-repeat center; padding: 26px 0 30px;">
+
+                <div class="logo-marquee" style="margin-top: 40px;">
+                    <div class="track track-left">
+                        @foreach (var item in Data.Partners.EmptyIfNull().Take(6))
+                        {
+                            <img src="@item.Logo" alt="partner">
+                        }
+                    </div>
+                </div>
+
+                @if (Data.Partners.Count() > 6)
+                {
+                    <div class="logo-marquee">
+                        <div class="track track-right">
+                            @foreach (var item in Data.Partners.EmptyIfNull().Skip(6))
+                            {
+                                <img src="@item.Logo" alt="partner">
+                            }
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Sponsor Area -->
+
+<!-- Start Features Area -->
+<section id="features" class="features-area">
+    <div class="container">
+        <div class="section-title">
+            <span class="tag">@Data.Features.SubTitle</span>
+            <h2 class="title">@Data.Features.Title</h2>
+            <p>@Data.Features.Desc</p>
+        </div>
+        <div class="row justify-content-center">
+            @foreach (var item in Data.Features.ListFeatures.EmptyIfNull())
+            {
+                <div class="col-lg-4 col-sm-6">
+                    <div class="item-single mb-30">
+                        <div class="icon blue"><i class="fal fa-laptop"></i></div>
+                        <h3>@item.Title</h3>
+                        <p>@item.Desc</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<!-- End Features Area -->
+
+<!-- Start Overview Area -->
+<section id="overview" class="overview-area mt-0 ptb-90">
+    <div class="container-fluid p-lg-0">
+        <div class="row align-items-center gx-xl-5">
+            <div class="col-lg-5 col-xxl-4">
+                <div class="content mb-30">
+                    <div class="section-title">
+                        <span class="tag">@Data.Overviews.SubTitle</span>
+                        <h2 class="title">@Data.Overviews.Title</h2>
+                        <p>@Data.Overviews.Desc</p>
+                        <a href="javascript:void(0)" class="btn_register btn primary-btn primary-btn-2">Đăng ký miễn phí</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 order-lg-first">
+                <div class="image mb-30">
+                    <div class="lazy-container aspect-ratio aspect-ratio-16-11">
+                        <img class="lazyload lazy-image" src="@Data.Overviews.Image" data-src="@Data.Overviews.Image" alt="image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Overview Area -->
+
+<!-- Start Video Area -->
+<div id="video" class="video-area">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="image">
+                    <div class="lazy-container aspect-ratio aspect-ratio-16-9">
+                        <img class="lazyload lazy-image" src="@Data.Videos.Image" data-src="@Data.Videos.Image" alt="video">
+                    </div>
+                    <a href="@Data.Videos.HrefVideo" class="youtube-popup video-btn">
+                        <i class="fas fa-play"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Video Area -->
+    
+<!-- Start Choose Area -->
+<section id="choose" class="choose-area choose-2">
+    <div class="container">
+        <div class="row align-items-center gx-xl-5">
+            <div class="col-lg-5">
+                <div class="section-title">
+                    <span class="tag">@Data.Applications.SubTitle</span>
+                    <h2 class="title">@Data.Applications.Title</h2>
+                    <p>@Data.Applications.Desc</p>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-12 col-sm-6">
+                        <div class="item-single mb-30">
+                            <div class="icon blue bg-blue">
+                                <i class="@Data.Applications.ListApplications.IconOne"></i>
+                            </div>
+                            <div class="content">
+                                <h3>@Data.Applications.ListApplications.TitleOne</h3>
+                                <p>@Data.Applications.ListApplications.DescOne</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-sm-6">
+                        <div class="item-single mb-30">
+                            <div class="icon green bg-green">
+                                <i class="@Data.Applications.ListApplications.IconTwo"></i>
+                            </div>
+                            <div class="content">
+                                <h3>@Data.Applications.ListApplications.TitleTwo</h3>
+                                <p>@Data.Applications.ListApplications.DescTwo</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-sm-6">
+                        <div class="item-single mb-30">
+                            <div class="icon red bg-red">
+                                <i class="@Data.Applications.ListApplications.IconThree"></i>
+                            </div>
+                            <div class="content">
+                                <h3>@Data.Applications.ListApplications.TitleThree</h3>
+                                <p>@Data.Applications.ListApplications.DescThree</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="image image-right mb-30">
+                    <div class="lazy-container aspect-ratio aspect-ratio-4-3">
+                        <img class="lazyload lazy-image" src="@Data.Applications.Image" data-src="@Data.Applications.Image" alt="image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bg Shape -->
+    <div class="bg-image">
+        <img src="@Data.Applications.Banner" alt="image">
+    </div>
+</section>
+<!-- End Choose ARea -->
+
+<!-- Start Fun-fact Area -->
+<section id="funFact" class="fun-fact-area fun-fact-2">
+    <div class="container-sm">
+        <div class="row text-center justify-content-center">
+            @foreach (var item in Data.Statisticals.EmptyIfNull())
+            {
+                <div class="col-sm-4">
+                    <div class="item-single mb-30">
+                        <h3>@*<span class="counter"></span>*@@item.Parameter</h3>
+                        <span>@item.Title</span>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<!-- End Fun-fact Area -->
+
+<!-- Start Testimonial Area -->
+<section id="testimonial" class="testimonial-area testimonial-2 ptb-120">
+    <div class="container">
+        <div class="section-title">
+            <h2 class="title">@Data.Testimonials.Title</h2>
+        </div>
+        <div class="testimonial-slider owl-carousel">
+            @foreach (var item in Data.Testimonials.ItemTestimonial.EmptyIfNull())
+            {
+                <div class="slider-item">
+                    <div class="image">
+                        <div class="lazy-container aspect-ratio aspect-ratio-1-1">
+                            <img class="lazyload lazy-image" src="@item.Image" data-src="@item.Image" alt="image">
+                        </div>
+                    </div>
+                    <div class="content">
+                        <p class="text">
+                            @item.Desc
+                        </p>
+                        <div class="review yellow">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h3 class="name">@item.Name</h3>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<!-- End Testimonial Area -->
+
+<!-- Start Cta Area -->
+<section id="ctaArea" class="cta-area cta-2 pt-120">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="section-title">
+                    <h2 class="title">@Data.Trials.Title</h2>
+                    <a href="javascript:void(0)" class="btn_register btn primary-btn primary-btn-2">Đăng ký miễn phí</a>
+                </div>
+                <div class="image">
+                    <div class="lazy-container aspect-ratio aspect-ratio-5-3">
+                        <img class="lazyload lazy-image"  src="@Data.Trials.Image" data-src="@Data.Trials.Image" alt="image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Cta Area -->
+
+<!-- Start Blog Area -->
+<section id="blog" class="blog-area blog-2 pt-120 pb-90">
+    <div class="container">
+        <div class="section-title">
+            <span class="tag">@Data.Blogs.SubTitle</span>
+            <h2 class="title">@Data.Blogs.Title</h2>
+        </div>
+        <div class="row justify-content-center">
+            @if(Data.ItemBlog.Count() == 0)
+            {
+                <h5>Đang cập nhật...</h5>
+            }
+            @foreach (var item in Data.ItemBlog.EmptyIfNull())
+            {
+                <div class="col-md-6 col-lg-4">
+                    <article class="item-single mb-30">
+                        <div class="image">
+                            <a href="@item.Path" class="lazy-container aspect-ratio">
+                                <img class="lazyload lazy-image" src="@item.ImageUrl" data-src="@item.ImageUrl" alt="image">
+                            </a>
+                        </div>
+                        <div class="content">
+                            <ul class="info-list">
+                                <li><i class="far fa-calendar-alt"></i>@item.CreatedTime.ToString("dd/MM/yyyy")</li>
+                                <li><i class="fas fa-user"></i>@item.Author</li>
+                            </ul>
+                            <h3 class="title">
+                                <a class="text-primary" href="@item.Path">
+                                    @item.Title
+                                </a>
+                            </h3>
+                        </div>
+                    </article>
+                </div>
+            }            
+        </div>
+    </div>
+</section>
+<!-- End Blog Area -->
+
+<!-- Start Faq Area -->
+<section id="faq" class="faq-area pb-90">
+    <div class="container">
+        <div class="row align-items-center justify-content-between">
+            <div class="col-lg-6">
+                <div class="section-title">
+                    <span class="tag">@Data.Questions.SubTitle</span>
+                    <h2 class="title">@Data.Questions.Title</h2>
+                </div>
+                <div class="accordion" id="faqAccordion">
+                    @foreach (var item in Data.Questions.Faq.EmptyIfNull().Select((x, y) => new { x, y }))
+                    {
+                        <div class="accordion-item">
+                            <h3 class="accordion-header" id="heading">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#@ToneRemoverTab.MakeSlug(item.x.Question)" aria-expanded="true" aria-controls="@ToneRemoverTab.MakeSlug(item.x.Question)">
+                                    @item.x.Question
+                                </button>
+                            </h3>
+                            <div id="@ToneRemoverTab.MakeSlug(item.x.Question)" class="accordion-collapse collapse @(item.y == 0 ? "show" : "")" aria-labelledby="heading" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    <p>@item.x.Answer</p>
+                                </div>
+                            </div>
+                        </div>
+                    }                    
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="image mb-30">
+                    <img src="@Data.Questions.Image" alt="image">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Faq Area -->
+
+<!-- Start Contact Area -->
+<section id="contact" class="contact-area contact-2 ptb-120">
+    <div class="container">
+        <div class="section-title">
+            <h2 class="title text-white">@Data.contact.Title</h2>
+            <p class="text-white">@Data.contact.Desc</p>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <form>
+                    <fieldset>
+                        <div class="row">                          
+                            @*<div class="col-md-12">
+                                <div class="form-group mb-30">
+                                    <input name="iduser" class="form-control" id="iduser" required="" placeholder="Email*" />
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>*@                          
+                            <div class="col-md-12 text-center">
+                                <button type="button" class="btn_register btn secondary-btn register">Đăng ký miễn phí</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Contact Area -->
+
+@section scripts
+{
+    <script>
+        $(document).ready(function(){
+            $('#iduser').focus(function(){
+                swal.fire({
+                    background: "-webkit-gradient(linear, left top, right top, color-stop(30%, #1828FF), to(#ffffff))",
+                    background: "linear-gradient(90deg, #178BFF 30%, #1ebafb 100%)",
+                    width: 700,
+                    html: "<iframe width=100% height=280px frameborder=0 src='@Root.Config.Company.RegsinLink/RE_trial.aspx' allowfullscreen='true'></iframe>",
+                    allowOutsideClick: "true",
+                    showCloseButton: true,
+                    showConfirmButton: false,
+                    showCancelButton: false,
+                });
+            });
+
+            $('.btn_register').click(function(){
+                swal.fire({
+                    background: "-webkit-gradient(linear, left top, right top, color-stop(30%, #1828FF), to(#ffffff))",
+                    background: "linear-gradient(90deg, #178BFF 30%, #1ebafb 100%)",
+                    width: 700,
+                    html: "<iframe width=100%  height=280px frameborder=0 src='@Root.Config.Company.RegsinLink/RE_trial.aspx' allowfullscreen='true'></iframe>",
+                    allowOutsideClick: "true",
+                    showCloseButton: true,
+                    showConfirmButton: false,
+                    showCancelButton: false,
+                });
+            });
+        });
+    </script>
+}

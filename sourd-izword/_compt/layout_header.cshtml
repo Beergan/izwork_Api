@@ -1,0 +1,82 @@
+﻿@inherits MyWebPage
+@using SLK.Common
+@functions {
+    [Component(Type = ComptType.Page_Element,
+        ComptName = "en:Page header component|vi:Thành phần đầu trang")]
+    public class ViewModel
+    {
+        public IDictionary<string, string> Phrases { get; set; } = new Dictionary<string, string>();
+
+        public static ViewModel Default => new ViewModel()
+        {
+
+        };
+    }/*end_viewmodel*/
+    private ViewModel _data;
+    private ViewModel Data => _data ?? (_data = ViewModel.Default);
+    private MyTranslator Text => new MyTranslator(Data?.Phrases);
+}
+@{
+    _data = LoadData<ViewModel>(key: $"{LangId}-{FileName}");
+    Layout = IsDirectCall ? "~/_layouts/_empty.cshtml" : null;
+    var cart = new ShoppingCart(this.Context);
+}
+<!-- Start header area -->
+<header id="header" class="header-area header-2">
+    <div class="main-navbar-area sticky-header">
+        <div class="main-responsive-nav">
+            <div class="container">
+                <div class="main-responsive-menu">
+                    <div class="logo">
+                        <a href="/">
+                            <img src="@Root.Config.Logo" alt="image">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-nav">
+            <div class="container">
+                <nav class="navbar navbar-expand-md navbar-light">
+                    <a class="navbar-brand" href="/">
+                        <img src="@Root.Config.Logo" alt="image">
+                        <img src="@Root.Config.Logo" alt="image">
+                    </a>
+                    <div class="collapse navbar-collapse mean-menu">
+                        <ul class="navbar-nav ms-auto" id="menu">
+                            @foreach (var menu in Root.Config.MainMenus.EmptyIfNull())
+                            {
+                                var subMenu = menu.SubMenus.EmptyIfNull();
+                                int countSubMenu = subMenu.Count();
+                                if (countSubMenu > 0)
+                                {
+                                    <li class="nav-item">
+                                        <a href="@menu.Href" class="nav-link toggle active">@menu.Title<i class="fal fa-plus"></i></a>
+                                        <ul class="dropdown-menu">
+                                            @foreach (var iSubMenu in subMenu)
+                                            {
+                                                <li class="nav-item subnav">
+                                                    <a href="@iSubMenu.Href" class="nav-link">@iSubMenu.Title</a>
+                                                </li>
+                                            }                                          
+                                        </ul>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="nav-item">
+                                        <a href="@menu.Href" class="nav-link">@menu.Title</a>
+                                    </li>
+                                }
+                            }
+                            <li class="cta-btn">
+                                <a href="@Root.Config.Company.Login" class="btn secondary-btn">Đăng nhập</a>
+                            </li>                           
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- End header area -->

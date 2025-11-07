@@ -1,0 +1,95 @@
+﻿@inherits MyAdminPage
+@{
+    var contact = Db.Query<PP_Contact>(x => x.Status == "NEW").Count();
+    var register = Db.Query<PP_Register>(x => x.Status == "NEW").Count();
+}
+<div id="sidebar-menu">
+    <ul class="metismenu" id="side-menu">
+        <li class="menu-title">@Text["ADMIN PANEL", "QUẢN TRỊ WEBSITE"]</li>
+
+        <!-- Dashboard -->
+        <li>
+            <a href="@Constants.Admin_Url" class="@(Page.Menu == "dashboard" ? "active" : "")">
+                <i class="fe-airplay"></i>
+                <span>@Text["Dashboard", "Trang chủ"]</span>
+            </a>
+        </li>
+        <li>
+            <a href="@Constants.Admin_Url/who" class="@(Page.Menu == "who" ? "active" : "")">
+                <i class="fe-user-check"></i>
+                <span>@Text["Who's online", "Ai đang online"]</span>
+            </a>
+        </li>
+        <li>
+            <a href="@Constants.Admin_Url/visit" class="@(Page.Menu == "visit" ? "active" : "")">
+                <i class="fe-activity"></i>
+                <span>@Text["Visit history", "Lịch sử truy cập"]</span>
+            </a>
+        </li>
+
+        <!-- Content Management -->
+        <li class="menu-title">@Text["Content Management", "Quản lý nội dung"]</li>
+        <li>
+            <a href="@Constants.Admin_Url/page" class="@(Page.Menu == "page" ? "active" : "")">
+                <i class="fe-book-open"></i>
+                <span>@Text["Pages setting", "Danh sách trang"]</span>
+            </a>
+        </li>
+        <li>
+            <a href="@Constants.Admin_Url/category" class="@(Page.Menu == "category" ? "active" : "")">
+                <i class="fe-folder"></i>
+                <span>@Text["Categories setting", "Danh sách chuyên mục"]</span>
+            </a>
+        </li>
+        <li>
+            <a href="@Constants.Admin_Url/post" class="@(Page.Menu == "post" ? "active" : "")">
+                <i class="fe-edit"></i>
+                <span>@Text["Post management", "Danh sách bài viết"]</span>
+            </a>
+        </li>
+        <li>
+            <a href="@Constants.Admin_Url/ckfinder/" target="_blank">
+                <i class="fe-image"></i>
+                <span>@Text["Media library", "Thư viện hình ảnh"]</span>
+            </a>
+        </li>
+
+        <!-- Settings -->
+        <li class="menu-title">@Text["System Settings", "Cấu hình hệ thống"]</li>
+        <li>
+            <a href="@Constants.Admin_Url/lang" class="@(Page.Menu == "i18n" ? "active" : "")">
+                <i class="fe-globe"></i>
+                <span>@Text["Languages", "Danh sách ngôn ngữ"]</span>
+            </a>
+        </li>
+        <li>
+            <a href="@Constants.Admin_Url/config" class="@(Page.Menu == "config" ? "active" : "")">
+                <i class="fe-settings"></i>
+                <span>@Text["General configs", "Cấu hình chung"]</span>
+            </a>
+        </li>
+
+        <!-- User Interaction -->
+        <li class="menu-title">@Text["User Interaction", "Người dùng & Tương tác"]</li>
+        <li>
+            <a href="@Constants.Admin_Url/advise" class="@(Page.Menu == "advise" ? "active" : "")">
+                <i class="fe-message-square"></i>
+                <span>@Text["Advise", "Tư vấn"]</span>
+            </a>
+        </li>
+        <li>
+            <a href="@Constants.Admin_Url/contact" class="@(Page.Menu == "contact" ? "active" : "")">
+                <i class="fe-mail"></i>
+                <span class="badge badge-danger badge-pill float-right">@contact</span>
+                <span>@Text["Contact", "Liên hệ"]</span>
+            </a>
+        </li>
+        <li>
+            <a href="@Constants.Admin_Url/register" class="@(Page.Menu == "register" ? "active" : "")">
+                <i class="fe-user-plus"></i>
+                <span class="badge badge-danger badge-pill float-right">@register</span>
+                <span>@Text["Register", "Danh sách đăng ký"]</span>
+            </a>
+        </li>
+    </ul>
+</div>

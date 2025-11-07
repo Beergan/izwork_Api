@@ -1,0 +1,1305 @@
+/* X-Large devices (large desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) and (max-width: 1700px) {
+    
+    /* -----------------------------------------
+        Home CSS
+    ----------------------------------------- */
+    .home-banner-area{
+        .shape{
+            img{
+                &.shape-1{
+                    top: 27%;
+                    left: 15%;
+                    max-width: 25px;
+                }
+                &.shape-2{
+                    top: 52%;
+                    left: 15%;
+                    max-width: 35px;
+                }
+                &.shape-3{
+                    top: 50%;
+                    left: 30%;
+                    max-width: 20px;
+                }
+                &.shape-4{
+                    top: 38%;
+                    right: 19%;
+                    max-width: 20px;
+                }
+                &.shape-5{
+                    top: 50%;
+                    right: 31%;
+                    max-width: 35px;
+                }
+                &.shape-6{
+                    top: 58%;
+                    right: 12%;
+                    max-width: 20px;
+                }
+            }
+        }
+    }
+    /* -----------------------------------------
+        Features CSS
+    ----------------------------------------- */
+    .features-area {
+        .section-gap{
+            padding-top: 210px;
+            padding-bottom: 300px;
+            &::after {
+                top: -5%;
+            }
+        }
+    }
+    /* -----------------------------------------
+        Overview CSS
+    ----------------------------------------- */
+    .overview-area{
+        margin-top: -210px;
+    }
+    /* -----------------------------------------
+        Blog CSS
+    ----------------------------------------- */
+    .blog-area {
+        .section-gap{
+            padding-top: 265px;
+        }
+    }
+    /* -----------------------------------------
+        Fun Fact CSS
+    ----------------------------------------- */
+    .fun-fact-area{
+        &.fun-fact-2{
+            margin-bottom: -360px;
+        }
+    }
+    /* -----------------------------------------
+        Testimonial CSS
+    ----------------------------------------- */
+    .testimonial-area{
+        &.testimonial-4{
+            // padding-top: 300px;
+        }
+    }
+}
+/* Medium devices (tablets, laptops between 992px to 1200px) */
+@media only screen and (min-width: 992px) and (max-width: 1199.98px) {
+    body {
+		font-size: 15px;
+  	}
+    h1{
+		font-size: 45px;
+	}
+	h2{
+		font-size: 38px;
+	}
+	h3{
+		font-size: 20px;
+	}
+    .ptb-120 {
+		padding-top: 100px;
+		padding-bottom: 100px;
+	}
+	.pt-120 {
+		padding-top: 100px;
+	}
+	.pb-120 {
+		padding-bottom: 100px;
+	}
+	.ptb-90 {
+		padding-top: 70px;
+		padding-bottom: 70px;
+	}
+	.pt-90 {
+		padding-top: 70px;
+	}
+	.pb-90 {
+		padding-bottom: 70px;
+	}
+    .section-title{
+        margin-bottom: 40px;
+        .title{
+            font-size: 38px;
+        }
+    }
+    /* -----------------------------------------
+        Home CSS
+    ----------------------------------------- */
+    .home-banner-area{
+        padding-top: 100px;
+        background-size: cover;
+        .banner-content{
+            .tag{
+                margin-bottom: 31px;
+            }
+            .title{
+                margin-top: -8px;
+            }
+        }
+        .banner-image{
+            &.image-bottom{
+                margin-bottom: -50px;
+            }
+        } 
+        .shape{
+            img{
+                &.shape-1{
+                    top: 27%;
+                    left: 15%;
+                    max-width: 25px;
+                }
+                &.shape-2{
+                    top: 52%;
+                    left: 15%;
+                    max-width: 35px;
+                }
+                &.shape-3{
+                    top: 50%;
+                    left: 30%;
+                    max-width: 20px;
+                }
+                &.shape-4{
+                    top: 38%;
+                    right: 19%;
+                    max-width: 20px;
+                }
+                &.shape-5{
+                    top: 50%;
+                    right: 31%;
+                    max-width: 35px;
+                }
+                &.shape-6{
+                    top: 58%;
+                    right: 12%;
+                    max-width: 20px;
+                }
+            }
+        }
+        &.banner-2{
+            padding-bottom: 70px;
+        }
+        &.banner-4{
+            padding-bottom: 630px;
+        }
+        &.banner-5{
+            padding-bottom: 100px;
+        }
+        &.banner-9{
+            padding-top: 100px;
+            .banner-content{
+                padding-top: 40px;
+            }
+        }
+    }
+    /* -----------------------------------------
+        Choose CSS
+    ----------------------------------------- */
+    .choose-area{
+        &.choose-2{
+            padding-top: 200px;
+            padding-bottom: 70px;
+            margin-top: -100px;
+        }
+    }
+    /* -----------------------------------------
+        Features CSS
+    ----------------------------------------- */
+    .features-area {
+        .section-gap{
+            padding-top: 148px;
+            padding-bottom: 100px;
+            &::after {
+                top: -9%;
+            }
+        }
+    }
+    /* -----------------------------------------
+        Overview CSS
+    ----------------------------------------- */
+    .overview-area{
+        margin-top: -30px;
+        &.overview-3{
+            padding-top: 630px;
+            padding-bottom: 151px;
+        }
+    }
+    /* -----------------------------------------
+        Blog CSS
+    ----------------------------------------- */
+    .blog-area {
+        &.blog-with-shape{
+            margin-top: -200px;
+        }
+        .section-gap{
+            padding-top: 210px;
+            padding-bottom: 50px;
+        }
+    }
+    /* -----------------------------------------
+        Sidebar CSS
+    ----------------------------------------- */
+    .sidebar-widget-area {
+        .widget{
+            padding: 20px;
+        }
+    }
+    /* -----------------------------------------
+        Fun Fact CSS
+    ----------------------------------------- */
+    .fun-fact-area{
+        &.fun-fact-2{
+            transform: none;
+            margin: 0;
+            padding-top: 100px;
+        }
+    }
+    /* -----------------------------------------
+        Testimonial CSS
+    ----------------------------------------- */
+    .testimonial-area{
+        &.testimonial-2{
+            padding-top: 70px;
+        }
+        &.testimonial-4{
+            padding-top: 70px;
+        }
+    }
+    /* -----------------------------------------
+        Pricing Plan CSS
+    ----------------------------------------- */
+    .pricing-plan-area {
+        .item-single{
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+    }
+    .page-title-area{
+        padding: 100px 0;
+    }
+    .services-area .item-single{
+        padding: 20px;
+    }
+}
+/* Medium devices (tablets, Between 768px to 992px) */
+@media only screen and (min-width: 768px) and (max-width: 991.98px) {
+    h1{
+		font-size: 48px;
+	}
+	h2{
+		font-size: 34px;
+	}
+	h3{
+		font-size: 22px;
+	}
+    .ptb-120 {
+		padding-top: 80px;
+		padding-bottom: 80px;
+	}
+	.pt-120 {
+		padding-top: 80px;
+	}
+	.pb-120 {
+		padding-bottom: 80px;
+	}
+	.ptb-90 {
+		padding-top: 50px;
+		padding-bottom: 50px;
+	}
+	.pt-90 {
+		padding-top: 50px;
+	}
+	.pb-90 {
+		padding-bottom: 50px;
+	}
+    .mb-sm-30{
+        margin-bottom: 30px;
+    }
+    .section-title{
+        margin-bottom: 40px;
+        margin-top: -6px;
+        .title{
+            font-size: 36px;
+        }
+    }
+    /* -----------------------------------------
+        Home Banner CSS
+    ----------------------------------------- */
+    .home-banner-area{
+        background-size: cover;
+        padding-top: 82px;
+        .banner-content {
+            text-align: center;
+            z-index: 2;
+            .tag{
+                margin-bottom: 33px;
+            }
+            .title{
+                font-size: 48px;
+                margin-top: -6px;
+            }
+            .text {
+                max-width: 575px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+        .shape{
+            img{
+                &.shape-1{
+                    left: 18%;
+                }
+                &.shape-4{
+                    right: 18%;
+                }
+            }
+        }
+        .banner-image{
+            max-width: 80%;
+            &.image-bottom{
+                margin-bottom: -36px;
+            }
+            &.image-right{
+                margin-top: 30px;
+                img{
+                    border-radius: 10px;
+                }
+            }
+            &.banner-image{
+                max-width: 80%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+        &.banner-2 {
+            padding-bottom: 50px;
+            .bg-shape.bg-shape-1 {
+                max-width: 40%;
+            }
+        }
+        &.banner-3 {
+            padding-bottom: 0;
+            margin-bottom: -30px;
+        }
+        &.banner-4{
+            padding-bottom: 50px;
+        }
+        &.banner-5{
+            padding-bottom: 80px;
+        }
+        &.banner-9 {
+            padding-top: 0;
+            .banner-content{
+                padding-top: 60px;
+            }
+            .info-list{
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .image-right{
+                margin-top: -38px;
+            }
+        }
+    }
+    /* -----------------------------------------
+        Integration CSS
+    ----------------------------------------- */
+    .integration-area {
+        .item-single {
+            .content {
+                padding-left: 12px;
+            }
+        }
+        &.integration-2,
+        &.integration-3{
+            .item-single {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                padding: 30px;
+                border-radius: 5px;
+                border: 1px solid #eee;
+                .content {
+                    padding: 0;
+                    margin-top: 15px;
+                    h3{
+                        margin-bottom: 5px;
+                    }
+                }
+            }
+        }
+    }
+    /* -----------------------------------------
+        Choose CSS
+    ----------------------------------------- */
+    .choose-area {
+        .section-title{
+            margin-inline-start: 0;
+        }
+        &.choose-2{
+            margin-top: -340px;
+            padding-bottom: 0;
+        }
+    }
+    .services-area{
+        .item-single{
+            &.mt-30{
+                margin-top: 0;
+            }
+        }
+    }
+    /* -----------------------------------------
+        Features CSS
+    ----------------------------------------- */
+    .features-area {
+        .section-gap {
+            padding-top: 160px;
+            padding-bottom: 50px;
+            &::after {
+                top: -9%;
+            }
+        }
+        &.features-3{
+            margin-top: 0;
+            .section-title{
+                text-align: center;
+            }
+            .mt-30{
+                margin-top: 0;
+            }
+            .mb-sm-30{
+                margin-bottom: 30px;
+            }
+        }
+    }
+    .main-features-area{
+        .item-single{
+            padding: 30px;
+            border-radius: 5px;
+            border: 1px solid #eee;
+            background-color: #fff;
+        }
+    }
+    /* -----------------------------------------
+        Overview CSS
+    ----------------------------------------- */
+    .overview-area{
+        margin-top: 0;
+        .section-title{
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        >div{
+            max-width: 720px;
+            margin: 0 auto;
+        }
+        .section-title{
+            text-align: center;
+            max-width: 676px;
+        }
+        .content{
+            margin-bottom: 40px;
+        }
+        &.overview-3{
+            padding-top: 610px;
+            padding-bottom: 130px;
+        }
+    }
+    /* -----------------------------------------
+        Testimonial CSS
+    ----------------------------------------- */
+    .testimonial-area {
+        .slider-item {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            .image {
+                margin-bottom: 20px;
+            }
+            .content {
+                padding: 0;
+            }
+        }
+        &.testimonial-2{
+            padding-top: 50px;
+        }
+        &.testimonial-4{
+            padding-top: 50px;
+        }
+    }
+    /* -----------------------------------------
+        Blog CSS
+    ----------------------------------------- */
+    .blog-area {
+        &.blog-with-shape{
+            margin-top: -200px;
+        }
+        .item-single{
+            .content{
+                padding: 25px;
+            }
+        }
+        .section-gap{
+            padding-top: 288px;
+            padding-bottom: 50px;
+        }
+    }
+    /* -----------------------------------------
+        Faq CSS
+    ----------------------------------------- */
+    .faq-area {
+        .section-title{
+            margin-inline-start: 0;
+        }
+    }
+    /* -----------------------------------------
+        Fun Fact CSS
+    ----------------------------------------- */
+    .fun-fact-area{
+        &.fun-fact-2{
+            margin: 0;
+            transform: none;
+            padding-top: 50px;
+        }
+    }
+    /* -----------------------------------------
+        Pricing Plan CSS
+    ----------------------------------------- */
+    .pricing-plan-area{
+        .section-top{
+            flex-direction: column;
+            justify-content: center;
+            .section-title{
+                text-align: center;
+                margin-left: auto;
+                margin-right: auto;
+                width: auto;
+            }
+        }
+    }
+    /* -----------------------------------------
+        Promo CSS
+    ----------------------------------------- */
+    .promo-area{
+        .content{
+            text-align: center;
+        }
+    }
+    /* -----------------------------------------
+        Page Title CSS
+    ----------------------------------------- */
+    .page-title-area{
+        padding: 80px 0;
+    }
+    /* -----------------------------------------
+        Pagination CSS
+    ----------------------------------------- */
+    .pagination{
+        padding-top: 0;
+    }
+}
+@media only screen and (max-width: 991.98px) {
+    
+}
+/* Small devices (landscape phones, less than 768px) */
+@media only screen and (max-width: 767.98px) {
+    /* Reset CSS */
+    body {
+		font-size: 15px;
+  	}
+    h1{
+		font-size: 35px;
+	}
+	h2{
+		font-size: 24px;
+	}
+	h3{
+		font-size: 20px;
+	}
+	h4{
+		font-size: 17px;
+	}
+	h5 { 
+		font-size: 16px; 
+	}
+	h6 { 
+		font-size: 15px; 
+	}
+    .ptb-120 {
+		padding-top: 60px;
+		padding-bottom: 60px;
+	}
+	.pt-120 {
+		padding-top: 60px;
+	}
+	.pb-120 {
+		padding-bottom: 60px;
+	}
+	.ptb-90 {
+		padding-top: 30px;
+		padding-bottom: 30px;
+	}
+	.pt-90 {
+		padding-top: 30px;
+	}
+	.pb-90 {
+		padding-bottom: 30px;
+	}
+    .mb-sm-30{
+        margin-bottom: 30px;
+    }
+	.btn{
+		padding: 12px 20px;
+		font-size: 12px;
+	}
+    .icon-btn{
+		padding: 12px 15px;
+    }
+    .section-title{
+        margin-bottom: 40px;
+        margin-top: -5px;
+        .tag{
+            font-size: 14px;
+        }
+        .title{
+            font-size: 28px;
+        }
+    }
+    /* -----------------------------------------
+        Home Banner CSS
+    ----------------------------------------- */
+    .home-banner-area{
+        background-size: cover;
+        padding-top: 60px;
+        .banner-content {
+            margin-bottom: 40px;
+            .tag {
+                font-size: 12px;
+                padding: 4px 20px;
+                margin-bottom: 26px;
+                .icon {
+                    width: 30px;
+                    height: 20px;
+                    line-height: 20px;
+                    font-size: 10px;
+                }
+            }
+            .title {
+                font-size: 35px;
+                margin-bottom: 15px;
+                margin-top: -6px;
+            }
+            .text {
+                max-width: 440px;
+                font-size: 15px;
+                margin-bottom: 20px;
+            }
+            .cta-btns{
+                .btn{
+                    margin-bottom: 20px;
+                }
+            }
+        }
+        .banner-image{
+            &.image-bottom{
+                margin-bottom: -16px;
+            }
+            &.image-right{
+                margin-top: 5px;
+                img{
+                    border-radius: 10px;
+                }
+            }
+            // &.banner-image{
+            //     max-width: 80%;
+            //     margin-left: auto;
+            //     margin-right: auto;
+            // }
+        }
+        .shape {
+            display: none;
+        }
+        &.banner-1{
+            .banner-content{
+                p{
+                    margin-left: auto;
+                    margin-right: auto;
+                }
+            }
+        }
+        &.banner-2{
+            padding-bottom: 20px;
+            .bg-shape.bg-shape-1{
+                display: none;
+            }
+        }
+        &.banner-3 {
+            padding-bottom: 0;
+            margin-bottom: -30px;
+            .banner-image .video-btn{
+                width: 70px;
+                height: 70px;
+            }
+        }
+        &.banner-4{
+            padding-bottom: 30px;
+        }
+        &.banner-5,
+        &.banner-8{
+            padding-bottom: 30px;
+        }
+        &.banner-8{
+            &.banner-bg{
+                background-position: center;
+            }
+            .banner-content{
+                max-width: 510px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+        &.banner-9 {
+            padding-top: 0;
+            .banner-content{
+                padding-top: 60px;
+            }
+            .info-list{
+                li{
+                    flex: 100%;
+                }
+            }
+            .image-right{
+                margin-top: -38px;
+            }
+        }
+    }
+    /* -----------------------------------------
+        Integration CSS
+    ----------------------------------------- */
+    .integration-area {
+        .item-single {
+            padding: 25px 20px;
+            border-radius: 5px;
+            border: 1px solid #eee;
+            flex-direction: column;
+            align-items: flex-start;
+            .content {
+                margin-top: 15px;
+                padding-inline-start: 0
+            }
+            .icon {
+                max-width: 54px;
+            }
+        }
+        &.integration-2,
+        &.integration-3{
+            .item-single{
+                align-items: flex-start;
+                .content {
+                    margin-top: 15px;
+                    padding-inline-start: 0
+                }
+            }
+        }
+        &.integration-4 {
+            .item-single{
+                flex-direction: row;
+                padding-left: 15px;
+                padding-right: 15px;
+                .content{
+                    margin-top: 0;
+                    text-align: left;
+                    padding-inline-start: 5px !important;
+                }
+            }
+            .images{
+                width: 300px;
+                height: 300px;
+                &::after{
+                    width: calc(100% - 40px);
+                    height: calc(100% - 40px);
+                }
+                .image{
+                    width: 60px;
+                    height: 60px;
+                    img{
+                        max-width: 35px;
+                    }
+                }
+            }
+        }
+    }
+    /* -----------------------------------------
+        Choose CSS
+    ----------------------------------------- */
+    .choose-area{
+        .item-single {
+            padding: 25px 20px;
+            border-radius: 5px;
+            border: 1px solid #eee;
+            background-color: #fff;
+            flex-direction: column;
+            .content {
+                margin-top: 15px;
+                padding-inline-start: 0
+            }
+        }
+        &.choose-2{
+            padding-top: 160px;
+            padding-bottom: 30px;
+            margin-top: -100px;
+        }
+        &.choose-3{
+            .item-single{
+                background-color: transparent;
+                border-color: #2b304e;
+            }
+        }
+    }
+    /* -----------------------------------------
+        Features CSS
+    ----------------------------------------- */
+    .features-area {
+        .section-gap {
+            padding-top: 110px;
+            padding-bottom: 262px;
+            &::after {
+                top: -12%;
+            }
+        }
+        .item-single{
+            padding-top: 30px;
+            padding-bottom: 30px;
+        }
+        &.features-3{
+            margin-top: 0;
+            .section-title{
+                margin: 0;
+                max-width: 676px;
+                p{
+                    margin-top: 15px;
+                    margin-bottom: 25px;
+                }
+            }
+        }
+    }
+    .main-features-area{
+        .item-single{
+            padding: 30px 20px 25px 20px;
+            border-radius: 5px;
+            border: 1px solid #eee;
+            background-color: #fff;
+        }
+        &.main-features-2{
+            .item-single{
+                .icon{
+                    width: 80px;
+                    height: 80px;
+                }
+            }
+        }
+    }
+    /* -----------------------------------------
+        Pricing Plan CSS
+    ----------------------------------------- */
+    .pricing-plan-area{
+        .section-top{
+            flex-direction: column;
+            justify-content: center;
+            .section-title{
+                text-align: center;
+                margin-left: auto;
+                margin-right: auto;
+                width: auto;
+            }
+        }
+        .nav-tabs-navigation {
+            .nav {
+                .nav-link {
+                    padding: 12px 20px;
+                    font-size: 12px;
+                }
+            }
+        }
+        &.pricing-plan-2 {
+            .item-single {
+                .content {
+                    .price {
+                        font-size: 34px;
+                    }
+                }
+            }
+        }
+    }
+    .pricing-area {
+        .item-single {
+            .content {
+                .price {
+                    font-size: 34px;
+                }
+            }
+        }
+    }    
+    /* -----------------------------------------
+        Overview CSS
+    ----------------------------------------- */
+    .overview-area {
+        >div{
+            max-width: 540px;
+            margin: 0 auto;
+        }
+        .content{
+            margin-bottom: 40px;
+        }
+        .section-title p{
+            margin-top: 20px;
+            margin-bottom: 25px;
+        }
+        &.overview-3{
+            padding-top: 60px;
+            padding-bottom: 30px;
+            margin: 0;
+            background-size: cover;
+        }
+    }
+    /* -----------------------------------------
+        Fun Fact CSS
+    ----------------------------------------- */
+    .fun-fact-area{
+        .item-single{
+            margin-top: -2px;
+            h3{
+                font-size: 45px;
+            }
+        }
+        &.fun-fact-2{
+            transform: none;
+            margin: 0;
+        }
+    }
+    /* -----------------------------------------
+        Testimonial CSS
+    ----------------------------------------- */
+    .testimonial-area {
+        .slider-item {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 20px;
+            .image {
+                margin-bottom: 20px;
+            }
+            .content {
+                padding: 0;
+                .text{
+                    margin-bottom: 15px;
+                }
+            }
+        }
+        &.testimonial-2{
+            padding-top: 30px;
+        }
+        &.testimonial-4{
+            padding-top: 30px;
+        }
+    }
+    .feedback-area{
+        .slider-item{
+            .slider-item-inner{
+                padding: 30px 20px;
+                .quote{
+                    top: 10px;
+                    right: 20px;
+                    opacity: .2;
+                }
+            }
+        }
+        &.feedback-2 {
+            .slider-item {
+                .slider-item-inner {
+                    .content {
+                        // padding: 20px;
+                        padding-left: 20px;
+                        padding-right: 20px;
+                        .text {
+                            font-size: 16px;
+                        }
+                    }
+                }
+            }
+        }
+        &.feedback-4{
+            .slider-item {
+                .slider-item-inner {
+                    .content {
+                        padding-left: 20px;
+                        padding-right: 20px;
+                        .text {
+                            font-size: 16px;
+                        }
+                    }
+                }
+            }
+        }
+        .section-top{
+            flex-direction: column;
+            justify-content: center;
+            .section-title{
+                text-align: center;
+                margin-left: auto;
+                margin-right: auto;
+                width: auto;
+                .icon{
+                    margin-left: auto !important;
+                    margin-right: auto;
+                }
+            }
+        }
+        
+    }
+    /* -----------------------------------------
+        Blog CSS
+    ----------------------------------------- */
+    .blog-area {
+       .item-single .content{
+        padding: 25px;
+       }
+        &.blog-with-shape{
+            margin-top: 0;
+            &::after{
+                top: -16%;
+            }
+            .section-gap {
+                padding-top: 56px;
+                padding-bottom: 30px;
+            }
+            .image{
+                img{
+                    width: 100%;
+                }
+            }
+        }
+        &.blog-2{
+            margin-top: -20px;
+        }
+    }
+    .blog-area.blog-with-sidebar {
+        .item-single {
+            .content {
+                padding-left: 15px;
+                padding-right: 15px;
+                .info-list {
+                    li {
+                        font-size: 12px;
+                        margin-inline-end: 6px;
+                        i {
+                            margin-inline-end: 5px;
+                            font-size: 10px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    /* -----------------------------------------
+        Faq CSS
+    ----------------------------------------- */
+    .faq-area {
+        .accordion-item {
+            .accordion-header {
+                .accordion-button {
+                    padding-bottom: 15px;
+                    font-size: 16px;
+                }
+            }
+            .accordion-body {
+                padding-top: 10px;
+            }
+        }
+        &.faq-3, 
+        &.faq-4{
+            .accordion-item{
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+        }
+    }
+    /* -----------------------------------------
+        Promo CSS
+    ----------------------------------------- */
+    .promo-area{
+        .content{
+            .title{
+                margin-bottom: 20px;
+            }
+            p{
+                margin-bottom: 20px;
+            }
+        }
+    }
+    /* -----------------------------------------
+        Services CSS
+    ----------------------------------------- */
+    .services-area{
+        .section-title{
+            .title{
+                margin-bottom: 20px;
+            }
+            p{
+                margin-bottom: 25px;
+            }
+        }
+        &.services-2{
+            .item-single{
+                padding: 25px 20px 20px 20px;
+            }
+        }
+    }
+    /* -----------------------------------------
+        Blog Details CSS
+    ----------------------------------------- */
+    .blog-details-area {
+        .item-single {
+            .content {
+                padding-left: 15px;
+                padding-right: 15px;
+                .info-list {
+                    li {
+                        font-size: 12px;
+                        margin-inline-end: 8px;
+                        i {
+                            margin-inline-end: 5px;
+                            font-size: 10px;
+                        }
+                    }
+                }
+                .blockquote {
+                    padding: 15px;
+                    p {
+                        margin-top: 0;
+                        font-size: 16px;
+                    }
+                }
+            }
+        }
+        .comments {
+            .comment-list {
+                .comment {
+                    .comment-body {
+                        .comment-content {
+                            p {
+                                font-size: 14px;
+                                line-height: 1.5;
+                            }
+                        }
+                    }
+                    .children {
+                        .comment-body {
+                            padding-inline-start: 25px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    /* -----------------------------------------
+        Sidebar CSS
+    ----------------------------------------- */
+    .sidebar-widget-area {
+        .widget {
+            padding: 30px 20px;
+        }
+    }
+    /* -----------------------------------------
+        Coming Soon CSS
+    ----------------------------------------- */
+    .coming-soon-area {
+        .coming-soon-box{
+            border-radius: 10px;
+            padding: 20px;
+            .count{
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+        }
+    } 
+    .pagination{
+        padding-top: 0;
+    }
+    .page-title-area{
+        padding: 60px 0;
+    }
+    .go-top{
+        width: 40px;
+        height: 40px;
+    }
+    .video-btn{
+        width: 70px;
+        height: 70px;
+        i{
+            font-size: 20px;
+        }
+    }
+    .newsletter-form {
+        .input-group .form-control{
+            padding-left: 15px;
+            padding-right: 10px;
+        }
+    }
+}
+@media only screen and (min-width: 576px) and (max-width: 767.98px){
+    /* -----------------------------------------
+        Banner CSS
+    ----------------------------------------- */
+    .banner-image{
+        &.image-bottom{
+            margin-bottom: -27px;
+        }
+    }
+    .home-banner-area{
+        &.banner-9 {
+            .info-list{
+                li{
+                    flex: 50%;
+                }
+            }
+        }
+    }
+    /* -----------------------------------------
+        Services CSS
+    ----------------------------------------- */
+    .services-area{
+        .mt-30{
+            margin-top: 0;
+        }
+    }
+    /* -----------------------------------------
+        Features CSS
+    ----------------------------------------- */
+    .features-area {
+        .item-single{
+            padding: 30px 20px;
+        }
+        .section-gap {
+            padding-top: 110px;
+            padding-bottom: 262px;
+            &::after {
+                top: -12%;
+            }
+        }
+        &.features-3{
+            .mt-30{
+                margin-top: 0;
+            }
+        }
+    }
+    /* -----------------------------------------
+        Pricing CSS
+    ----------------------------------------- */
+    .pricing-area {
+        .item-single{
+            padding: 30px 20px;
+        }
+    }
+}

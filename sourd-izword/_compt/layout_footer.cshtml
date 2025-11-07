@@ -1,0 +1,193 @@
+﻿@inherits MyWebPage
+@using SLK.Common
+@functions {
+    [Component(Type = ComptType.Page_Element,
+        ComptName = "en:Page footer component|vi:Thành phần chân trang")]
+    public class ViewModel
+    {
+        public IDictionary<string, string> Phrases { get; set; } = new Dictionary<string, string>();
+
+        [Field(
+            Title = "en:Chuyên mục tính năng|vi:Chuyên mục tính năng",
+            Required = false,
+            Control = InputControlType.Link)]
+        public string ServiceCateLinks { get; set; }
+
+        [Field(
+            Title = "en:Chuyên mục tin tức|vi:Chuyên mục tin tức",
+            Required = false,
+            Control = InputControlType.Link)]
+        public string BlogCateLinks { get; set; }
+
+        [Field(
+            Title = "en:Mô tả|vi:Mô tả",
+            Required = false,
+            Control = InputControlType.TextBox)]
+        public string Desc { get; set; }
+
+        [Field(Title = "Các liên kết")]
+        public Link[] Links { get; set; }
+
+        [Field(Title = "Giới thiệu")]
+        public About[] Abouts { get; set; }
+
+        public VM_Service[] Services { get; set; }
+
+        public VM_Blog[] Blogs { get; set; }
+
+        public class Link
+        {
+            [Field(
+                Title = "en:Tiêu đề|vi:Tiêu đề",
+                Required = false,
+                Control = InputControlType.TextBox)]
+            public string Title { get; set; }
+
+            [Field(
+                Title = "en:Đường dẫn|vi:Đường dẫn",
+                Required = false,
+                Control = InputControlType.TextBox)]
+            public string Href { get; set; }
+        }
+
+        public class About
+        {
+            [Field(
+                Title = "en:Tiêu đề|vi:Tiêu đề",
+                Required = false,
+                Control = InputControlType.TextBox)]
+            public string Title { get; set; }
+
+            [Field(
+                Title = "en:Đường dẫn|vi:Đường dẫn",
+                Required = false,
+                Control = InputControlType.Link)]
+            public string Href { get; set; }
+        }
+
+        public static ViewModel Default => new ViewModel()
+        {
+            Desc = "To help improve your personal and your team's productivity, Samu ties into your existing tools, services and workflow."
+        };
+    }/*end_viewmodel*/
+    private ViewModel _data;
+    private ViewModel Data => _data ?? (_data = ViewModel.Default);
+    private MyTranslator Text => new MyTranslator(Data?.Phrases);
+}
+@{
+    _data = LoadData<ViewModel>(key: $"{LangId}-{FileName}#{NodeSlug}-{CurrentPage}", setup: (model) =>
+    {
+        model = model ?? new ViewModel();
+
+        string ServicePath = model.ServiceCateLinks.GetAfter("/");
+        var ServiceCate = Db.GetOne<PP_Category>(x => x.CategoryPath == ServicePath);
+        var arrCateService = Root.CategoryIndexes[ServiceCate.Id].ToList();
+        model.Services = (from n in Db.Table<PP_Node>()
+                          join cat in Db.Table<PP_Category>() on n.CategoryId equals cat.Id
+                          where n.NodeType == "post" && arrCateService.Contains(n.CategoryId ?? 0) && n.Featured
+                          select new VM_Service
+                          {
+                              Title = n.Title,
+                              CategoryPath = cat.CategoryPath,
+                              CreatedTime = n.CreatedTime
+                          }).OrderByDescending(x => x.CreatedTime).Take(5).ToArray();
+
+        string BlogPath = model.BlogCateLinks.GetAfter("/");
+        var BlogCate = Db.GetOne<PP_Category>(x => x.CategoryPath == BlogPath);
+        model.Blogs = (from cat in Db.Table<PP_Category>() 
+                       where cat.NodeType == "post" && (cat.ParentId ?? 0) == BlogCate.Id
+                       select new VM_Blog
+                       {
+                           CategoryName = cat.Title,
+                           CategoryPath = cat.CategoryPath,
+                           CreatedTime = cat.CreatedTime
+                       }).OrderByDescending(x => x.CreatedTime).Take(5).ToArray();
+
+        return model;
+    });
+    Layout = IsDirectCall ? "~/_layouts/_empty.cshtml" : null;
+    var cart = new ShoppingCart(this.Context);
+}
+<!-- Start Footer Area -->
+<footer id="footer" class="footer-area footer-3">
+    <div class="footer-top pt-120 pb-90">
+        <div class="container">
+            <div class="row gx-xl-5">
+                <div class="col-lg-4 col-md-12">
+                    <div class="footer-widget">
+                        <div class="navbar-brand">
+                            <a href="/">
+                                <img src="@Root.Config.Logo" alt="image">
+                            </a>
+                        </div>
+                        <p>@Data.Desc</p>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6">
+                    <div class="footer-widget">
+                        <h3>Giới thiệu</h3>
+                        <ul class="footer-links">
+                            @foreach (var item in Data.Abouts.EmptyIfNull())
+                            {
+                                <li>
+                                    <i class="fal fa-angle-right"></i>
+                                    <a href="@item.Href">@item.Title</a>
+                                </li>
+                            }                                                    
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6">
+                    <div class="footer-widget">
+                        <h3>Tính năng</h3>
+                        <ul class="footer-links">
+                            @foreach (var item in Data.Services.EmptyIfNull())
+                            {
+                                <li>
+                                    <i class="fal fa-angle-right"></i>
+                                    <a href="@item.CategoryPath">@item.Title</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6">
+                    <div class="footer-widget">
+                        <h3>Tin tức</h3>
+                        <ul class="footer-links">
+                            @foreach (var item in Data.Blogs.EmptyIfNull())
+                            {
+                                <li>
+                                    <i class="fal fa-angle-right"></i>
+                                    <a href="@item.CategoryPath">@item.CategoryName</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6">
+                    <div class="footer-widget">
+                        <h3>Liên kết</h3>
+                        <ul class="footer-links">
+                            @foreach (var item in Data.Links.EmptyIfNull())
+                            {
+                                <li>
+                                    <i class="fal fa-angle-right"></i>
+                                    <a href="@item.Href">@item.Title</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="copy-right-area text-center">
+        <div class="container">
+            <span>
+                @Root.Config.Company.CopyrightText
+            </span>
+        </div>
+    </div>
+</footer>
+<!-- End Footer Area -->

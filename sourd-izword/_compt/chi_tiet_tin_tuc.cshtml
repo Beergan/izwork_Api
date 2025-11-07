@@ -1,0 +1,400 @@
+﻿@inherits MyWebPage
+@using SLK.Common
+@functions {
+    [Component(
+        Type = ComptType.Page_Template,
+        PathPostfix = "/{0}.html",
+        ComptName = "en:Blog single template|vi:Mẫu thông tin tin tức",
+        PageType = "item", NodeType = "post")]
+    public class ViewModel : VM_Blog
+    {
+        public IDictionary<string, string> Phrases { get; set; } = new Dictionary<string, string>();
+
+        public KeyValuePair<string, string>[] Breadcrumbs { get; set; }
+
+        public string MetaDescription { get; set; }
+
+        public string MetaKeywords { get; set; }
+
+        public string Banner { get; set; }
+
+        public string JsonBreadcrumb { get; set; }
+
+        public int Id { get; set; }
+
+        public string NextBlogTitle { get; set; }
+
+        public string NextBlogPath { get; set; }
+
+        public VM_Blog[] Itemblog { get; set; }
+
+        public VM_Blog[] RecentBlogs { get; set; }
+
+        public static ViewModel Default => new ViewModel()
+        {
+
+        };
+    }/*end_viewmodel*/
+    private ViewModel _data;
+    private ViewModel Data => _data ?? (_data = ViewModel.Default);
+    private MyTranslator Text => new MyTranslator(Data?.Phrases);
+    private FieldExtractor<PP_Comment> field = new FieldExtractor<PP_Comment>();
+    private PP_Comment model = new PP_Comment() { Status = "NEW" };
+}
+@{
+    var query = Request.Url.Query;
+
+    if (IsPost && query == "?comment")
+    {
+        new Func<Action>(() =>
+        {
+            try
+            {
+                AntiForgery.Validate();
+                string captcha = Request.Form[nameof(captcha)].ToLower();
+                Validation.RequireField(field.GetName(t => t.Name));
+                Validation.RequireField(field.GetName(t => t.Email));
+                Validation.Add(field.GetName(t => t.Email), Validator.Regex("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$"));
+                if (!Validation.IsValid())
+                {
+                    return AjaxResult.BadRequest("Hãy nhập đầy đủ thông tin!");
+                }
+
+                if (captcha != this.Context.Session["CaptchaVerify"].ToString())
+                {
+                    return AjaxResult.BadRequest("Capcha không hợp lệ!");
+                }
+
+                var model = new PP_Comment() { Status = "NEW" };
+                model.Name = Request.Form[field.GetName(t => t.Name)].NullIfWhiteSpace();
+                model.Email = Request.Form[field.GetName(t => t.Email)].NullIfWhiteSpace();
+                model.Comment = Request.Form[field.GetName(t => t.Comment)].NullIfWhiteSpace();
+
+                model.ProcessNote = "Chưa xử lý";
+                Db.Insert<PP_Comment>(model);
+
+                Response.Write("Đăng bình luận thành công");
+                return () => Response.End();
+            }
+            catch (Exception ex)
+            {
+                return AjaxResult.BadRequest("Đã có lỗi xảy ra!");
+            }
+        })()();
+    }
+
+    string keyword = Request.QueryString[nameof(keyword)];
+    var slug = ToneRemover.MakeSlug(keyword);
+
+    _data = LoadData<ViewModel>(key: $"{LangId}-{FileName}#{NodeSlug}", setup: (model) =>
+    {
+        model = model ?? (from i in Db.Table<PP_Node>()
+                          join cat in Db.Table<PP_Category>() on i.CategoryId equals cat.Id
+                          where i.NodeType == "post" && i.NodePath == NodeSlug
+                          select new ViewModel
+                          {
+                              Id = i.Id,
+                              JsonContent = i.Content,
+                              Title = i.Title,
+                              Path = i.NodePath,
+                              Summary = i.Summary,
+                              ImageUrl = i.ImageUrl,
+                              CreatedTime = i.CreatedTime,
+                              CategoryId = cat.Id,
+                              CategoryName = cat.Title,
+                              CategoryPath = cat.CategoryPath,
+                              JsonBreadcrumb = cat.Breadcrumb,
+                              MetaDescription = i.MetaDescription,
+                              MetaKeywords = i.MetaKeywords,
+                              Banner = cat.ImageUrl
+                          }).FirstOrDefault();
+
+        if (model == null) return null;
+
+        var json = Root.DecodeJson<VM_Blog>(model.JsonContent);
+        if (json != null)
+        {
+            model.ContentTop = json.ContentTop;
+            model.ContentBottom = json.ContentBottom;
+            model.HrefVideo = json.HrefVideo;
+            model.BgVideo = json.BgVideo;
+            model.DescVideo = json.DescVideo;
+            model.HrefShare = json.HrefShare;
+            model.Author = json.Author;
+            model.TitleWidget = json.TitleWidget;
+            model.HrefWidget = json.HrefWidget;
+        }
+        model.Breadcrumbs = Newtonsoft.Json.JsonConvert.DeserializeObject<KeyValuePair<string, string>[]>(model.JsonBreadcrumb);
+
+        var nextBlog = Db.Query<PP_Node>(t => t.CategoryId == model.CategoryId && t.Id > model.Id).OrderBy(x => x.Id).Take(1).FirstOrDefault();
+        if (nextBlog != null)
+        {
+            model.NextBlogTitle = nextBlog.Title;
+            model.NextBlogPath = nextBlog.NodePath;
+        }
+
+    
+        var catBog = Db.GetOne<PP_Category>(x => x.CategoryPath == model.CategoryPath);
+        if (catBog != null)
+        {
+            model.RecentBlogs = Db.Query<PP_Node>(t => t.NodeType == "post" && t.CategoryId == catBog.Id)
+                .OrderByDescending(t => t.CreatedTime)
+                .Select(i => new VM_Blog
+                {
+                    Title = i.Title,
+                    Path = i.NodePath,
+                    ImageUrl=i.ImageUrl,
+                    CreatedTime = i.CreatedTime,
+                }).ToArray();
+        }
+
+        return model;
+    });
+
+    Layout = $"~/_layouts/_layout.cshtml";
+    Page.Title = Data.Title;
+    Page.Description = Data.MetaDescription;
+    Page.Keywords = Data.MetaKeywords;
+}
+<!-- Start Page Title area-->
+<div class="page-title-area" style="background-image: url(@Data.Banner)">
+    <div class="container">
+        <div class="content text-center">
+            <h1 class="title_banner">@Data.Title</h1>
+            <ul class="list-unstyled">
+                <li class="d-inline"><a href="/">Trang chủ</a></li>
+                @foreach (var bc in Data.Breadcrumbs.EmptyIfNull().Select((x, y) => new { x, y }))
+                {
+                    if (bc.y + 1 == Data.Breadcrumbs.Count())
+                    {
+                        <li class="d-inline">/</li>
+                        <li class="d-inline"><a href="@bc.x.Key">@bc.x.Value</a></li>
+                    }
+                    else
+                    {
+                        <li class="d-inline">/</li>
+                        <li class="d-inline"><a href="@bc.x.Key">@bc.x.Value</a></li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- End Page Title area -->
+    
+<!-- Start Blog Details Area -->
+<div class="blog-details-area pt-120 pb-90">
+    <div class="container">
+        <div class="row justify-content-center gx-xl-5">
+            <div class="col-lg-8">
+                <div class="blog-description mb-50">
+                    <article class="item-single">
+                        <div class="image">
+                            <div class="lazy-container aspect-ratio">
+                                <img class="lazyload lazy-image" src="@Data.ImageUrl" data-src="@Data.ImageUrl" alt="image">
+                            </div>
+                            <a href="@Data.HrefShare" class="btn primary-btn primary-btn-2"><i class="fas fa-share-alt"></i>Chia sẻ</a>
+                        </div>
+                        <div class="content">
+                            <ul class="info-list">
+                                <li><i class="far fa-calendar-alt"></i>@Data.CreatedTime.ToString("d")</li>
+                                <li><i class="fas fa-user"></i>@Data.Author</li>
+                                <li><i class="fas fa-tag"></i><a href="@Data.CategoryPath">@Data.CategoryName</a></li>
+                            </ul>
+                            <h3 class="title">
+                                <a href="@Data.Path">
+                                    @Data.Title
+                                </a>
+                            </h3>
+                            <p> @Data.ContentTop</p>
+                            
+                            <div class="row">
+                                <div class="col-xl-6">
+                                    <div class="video-image mb-30" style="background-image:url(@Data.BgVideo)">
+                                        <a href="@Data.HrefVideo" class="youtube-popup video-btn">
+                                            <i class="fas fa-play"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6">
+                                    <blockquote class="blockquote mb-30">
+                                        <i class="fas fa-quote-left"></i>
+                                        <p>@Data.DescVideo</p>
+                                    </blockquote>
+                                </div>
+                            </div>
+                            <p class="m-0">@Data.ContentBottom</p>
+                        </div>
+                    </article>
+                </div>
+                <div class="more-news mb-20">
+                    <span class="h2 d-block mb-20">Các tin khác</span>
+                    <div class="row">
+                        @if (Data.RecentBlogs.Count() < 4)
+                        {
+                            <div class="col-12 col-md-12">
+                                <h4>Đang cập nhật...</h4>
+                            </div>
+                        }
+                        @foreach (var item in Data.RecentBlogs.EmptyIfNull().Skip(3).Take(2))
+                        {
+                            <div class="col-md-6">
+                                <article class="item-single mb-30">
+                                    <div class="image">
+                                        <a href="@item.Path" class="lazy-container aspect-ratio">
+                                            <img class="lazyload lazy-image" src="@item.ImageUrl" data-src="@item.ImageUrl" alt="image">
+                                        </a>
+                                    </div>
+                                    <div class="content">
+                                        <ul class="info-list">
+                                            <li><i class="far fa-calendar-alt"></i>@item.CreatedTime.ToString("dd/MM/yyyy")</li>
+                                            <li><i class="fas fa-user"></i>@item.Author</li>
+                                        </ul>
+                                        <h3 class="title m-0">
+                                            <a href="@item.Path">
+                                                @item.Title
+                                            </a>
+                                        </h3>
+                                    </div>
+                                </article>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="comments mb-30">
+                    @*<div class="comment-box mb-50">
+                        <span class="h2 d-block mb-20">Bình luận</span>
+                        <ol class="comment-list">
+                            <li class="comment">
+                                <div class="comment-body">
+                                    <div class="comment-author">
+                                        <div class="lazy-container aspect-ratio aspect-ratio-1-1">
+                                            <img class="lazyload lazy-image" src="assets/images/placeholder.png" data-src="assets/images/blog/author-1.jpg" alt="image" />
+                                        </div>
+                                    </div>
+                                    <div class="comment-content">
+                                        <h4 class="name">Adam Haul</h4>
+                                        <p>
+                                            Quality control of your data including read length distribution and uniformity assessment in a few clicks and choose your favorite. name this.
+                                        </p>
+                                        <a href="404-error.html" class="btn-reply"><i class="fas fa-reply-all"></i>Reply</a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="comment">
+                                <div class="comment-body">
+                                    <div class="comment-author">
+                                        <div class="lazy-container aspect-ratio aspect-ratio-1-1">
+                                            <img class="lazyload lazy-image" src="assets/images/placeholder.png" data-src="assets/images/blog/author-2.jpg" alt="image" />
+                                        </div>
+                                    </div>
+                                    <div class="comment-content">
+                                        <h4 class="name">David Murphy</h4>
+                                        <p>
+                                            Quality control of your data including read length distribution and uniformity assessment in a few clicks and choose your favorite. name this.
+                                        </p>
+                                        <a href="404-error.html" class="btn-reply"><i class="fas fa-reply-all"></i>Reply</a>
+                                    </div>
+                                </div>
+                                <ol class="children">
+                                    <li class="comment">
+                                        <div class="comment-body">
+                                            <div class="comment-author">
+                                                <div class="lazy-container aspect-ratio aspect-ratio-1-1">
+                                                    <img class="lazyload lazy-image" src="assets/images/placeholder.png" data-src="assets/images/blog/author-3.jpg" alt="image" />
+                                                </div>
+                                            </div>
+                                            <div class="comment-content">
+                                                <h4 class="name">Harry jain</h4>
+                                                <p>
+                                                    Quality control of your data including read length distribution and uniformity assessment in a few clicks and choose your favorite. name this.
+                                                </p>
+                                                <a href="404-error.html" class="btn-reply"><i class="fas fa-reply-all"></i>Reply</a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </div>*@
+                    @*<div class="comment-reply mb-30">
+                        <span class="h2 d-block">Để lại bình luận tại đây</span>
+                        <p class="comment-notes">
+                            <span id="email-notes">Địa chỉ email của bạn sẽ không được công bố.</span>
+                            Các trường bắt buộc được đánh dấu
+                            <span class="required">*</span>
+                        </p>
+                        <form id="commentForm" action="?comment" class="comment-form" method="post">
+                            @AntiForgery.GetHtml()
+                            <fieldset>
+                                <div class="form-group mb-20">
+                                    <input type="text" id="name" class="form-control" name="name" placeholder=" Tên*" required="required" />
+                                </div>
+                                <div class="form-group mb-20">
+                                    <input type="email" id="email" class="form-control" name="email" placeholder=" Email*" required="required" />
+                                </div>
+                                <div class="form-group mb-30">
+                                    <textarea id="comment" name="comment" class="form-control" placeholder="Viết bình luận" required="required" rows="6"></textarea>
+                                </div>
+                                <button type="submit"class="btn primary-btn primary-btn-5 comment">
+                                    Đăng bình luận
+                                </button>
+                                </fieldset>
+                        </form>
+                    </div>*@
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <aside class="sidebar-widget-area">
+                   
+                    <div class="widget widget-social-link mb-30">
+                        <h3 class="title">Theo dõi chúng tôi</h3>
+                        <ul class="list-unstyled m-0">
+                            <li class="d-inline">
+                                <a href="@Root.Config.LinkFacebook" target="_blank" class="facebook"><i class="fab fa-facebook-square"></i></a>
+                            </li>
+                            <li class="d-inline ms-1">
+                                <a href="@Root.Config.LinkTwitter" target="_blank" class="twitter"><i class="fab fa-twitter-square"></i></a>
+                            </li>
+                            <li class="d-inline ms-1">
+                                <a href="@Root.Config.LinkGoogle" target="_blank" class="google"><i class="fab fa-google-plus-square"></i></a>
+                            </li>
+                            <li class="d-inline ms-1">
+                                <a href="@Root.Config.Linkedin" target="_blank" class="linkedin"><i class="fab fa-linkedin"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="widget widget-post mb-30">
+                        <h3 class="title">Bài viết gần đây</h3>
+                        @foreach (var item in Data.RecentBlogs.EmptyIfNull().Take(3))
+                        {
+                            <article class="article-item mb-30">
+                                <div class="image">
+                                    <a href="@item.Path" class="lazy-container aspect-ratio">
+                                        <img class="lazyload lazy-image" src="@item.ImageUrl" data-src="@item.ImageUrl" alt="image">
+                                    </a>
+                                </div>
+                                <div class="content">
+                                    <h6>
+                                        <a href="@item.Path">@item.Title</a>
+                                    </h6>
+                                    <div class="time">
+                                        @item.CreatedTime.ToString("dd/MM/yyyy")
+                                    </div>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                   
+                    <div class="widget widget-adds mb-30">
+                        <div class="content text-center">
+                            <h3>@Data.TitleWidget</h3>
+                            <a href="@Data.HrefWidget" class="btn secondary-btn text-uppercase">Bắt đầu</a>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Blog Details Area --> 

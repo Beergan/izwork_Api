@@ -1,0 +1,38 @@
+﻿@inherits MyWebPage
+@using SLK.Common
+@functions {
+    [Component(
+        Type = ComptType.Page_Template,
+        PathPostfix = "/{0}.html",
+        ComptName = "en:Service single template|vi:Mẫu thông tin tính năng",
+        PageType = "item", NodeType = "post")]
+    public class ViewModel : VM_Service
+    {
+        public IDictionary<string, string> Phrases { get; set; } = new Dictionary<string, string>();
+
+        public KeyValuePair<string, string>[] Breadcrumbs { get; set; }
+
+        public string MetaDescription { get; set; }
+
+        public string MetaKeywords { get; set; }
+
+        public static ViewModel Default => new ViewModel()
+        {
+
+        };
+    }/*end_viewmodel*/
+    private ViewModel _data;
+    private ViewModel Data => _data ?? (_data = ViewModel.Default);
+    private MyTranslator Text => new MyTranslator(Data?.Phrases);
+}
+@{
+    _data = LoadData<ViewModel>(key: $"{LangId}-{FileName}#{NodeSlug}", setup: (model) =>
+    {
+        return model;
+    });
+
+    Layout = $"~/_layouts/_layout.cshtml";
+    //Page.Title = Data.Title;
+    Page.Description = Data.MetaDescription;
+    Page.Keywords = Data.MetaKeywords;
+}

@@ -1,0 +1,343 @@
+﻿@inherits MyWebPage
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <base href="/" />
+    <meta charset="utf-8" />
+    <title>@(Page.Title != null ? Page.Title + " - " : string.Empty)@Root.Config.WebTitle</title>
+    <meta name="description" content="@Page.Description">
+    <meta name="keywords" content="@Page.Keywords">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <link rel="canonical" href="@Request.Url.AbsoluteUri" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <link rel="icon" href="@Root.Config.Favicon" type="image/x-icon" />
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="@(Page.Title ?? Root.Config.WebTitle)">
+    <meta property="og:description" content="@Page.Description">
+    <meta property="og:url" content="@Request.Url.AbsoluteUri">
+    <meta property="og:image" content="@(Page.Image ?? @Root.Config.Favicon)">
+    <meta property="og:site_name" content="@Root.Config.WebTitle">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@(Page.Title ?? Root.Config.WebTitle)">
+    <meta name="twitter:description" content="@Page.Description">
+    <meta name="twitter:image" content="@(Page.Image ?? @Root.Config.Favicon)">
+    <script type="application/ld+json">
+{
+  "@@context": "https:/schema.org",
+  "@@type": "Organization",
+  "name": "@Root.Config.WebTitle",
+  "url": "@Request.Url.AbsoluteUri",
+  "logo": "@Root.Config.Favicon",
+  "contactPoint": {
+    "@@type": "ContactPoint",
+    "telephone": "@Root.Config.Company.ContactPhone",
+    "email": "@Root.Config.Company.Email",
+    "Description": "@Page.Description",
+      "areaServed": "@Root.Config.Company.Address"
+  }
+}
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=@Root.Config.GoogleGtag"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', '@Root.Config.GoogleGtag');
+    </script>
+    <link rel="icon" href="@Root.Config.Favicon" sizes="32x32">
+    <link rel="icon" href="@Root.Config.Favicon" sizes="192x192">
+
+
+    @*<link rel="shortcut icon" href="assets/images/logo/favicon.png" type="image/x-icon">*@
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <!-- Fontawesome Icon CSS -->
+    <link rel="stylesheet" href="assets/fonts/fontawesome/css/all.min.css">
+    <!-- Magnific Popup CSS -->
+    <link rel="stylesheet" href="assets/css/magnific-popup.min.css">
+    <!-- Meanmenu CSS -->
+    <link rel="stylesheet" href="assets/css/meanmenu.min.css">
+    <!-- Owl-Carousel CSS -->
+    <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
+    <!-- Main Style CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Responsive CSS -->
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" media="all" href="files/css/css_Q763cgvAe-iUGMX3IaieOShBTPOO3oVP9ME8gEbGlnE.css" />
+    <link rel="stylesheet" media="all" href="assets/css/main.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    @RenderSection("head", required: false)
+
+
+</head>
+<body>
+
+
+
+    <!-- Start preloader -->
+    <div id="preLoader">
+        <div class="wrapper">
+            <div class="loader" style="padding-top: 20px">
+                <img src="@Root.Config.Loader" />
+            </div>
+            <span class="text">Loading...</span>
+        </div>
+    </div>
+    <!-- End preloader -->
+
+    @RenderPage("/_compt/layout_quangcao.cshtml")
+
+    @RenderPage("/_compt/layout_header.cshtml")
+
+    @RenderBody()
+
+    @RenderPage("/_compt/layout_footer.cshtml")
+
+  
+    <div id="scrollUp2">
+        <i class="fa fa-angle-up"></i>
+    </div>
+    <div class="float-contact" style="position: fixed; z-index: 1000; bottom: 2%; left: 1%; ">
+
+        <div class="wrap" style="margin-top: 20px">
+            <button class="button03" title="Zalo"><a target="_blank" href="http://zalo.me/@Root.Config.Company.Zalo"><i class="iconzalo"><img src="~/assets/images/zalo.jpg" alt="zalo" style="width:33px"></i></a></button>
+        </div>
+
+
+        <div class="wrap" style="margin-top: 20px">
+            <button class="button02" style="background-color:white">
+                <a href="https://wa.me/@Root.Config.Company.Whatsapp" target="_blank">
+                    <i class="fa fa-whatsapp" style="font-size: 32px; color: #25D366;"></i>
+                </a>
+            </button>
+        </div>
+
+        <div class="wrap" style="margin-top: 20px">
+            <button class="button01" title="Hotline:@Root.Config.Company.ContactPhone"><a href="tel:@Root.Config.Company.ContactPhone"><i class="fa fa-phone" style="font-size: 20px;color:white"></i></a></button>
+        </div>
+    </div>
+    <!-- Start Go to Top -->
+    <div class="go-top"><i class="fal fa-angle-up"></i></div>
+    <!-- End Go to Top -->
+    <!-- Jquery JS -->
+    <script src="assets/js/jquery.min.js"></script>
+    <!-- Popper JS -->
+    <script src="assets/js/popper.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="assets/js/bootstrap.min.js"></script>
+    <!-- Waypoint JS -->
+    <script src="assets/js/jquery.waypoints.js"></script>
+    <!-- Magnific Popup JS -->
+    <script src="assets/js/jquery.magnific-popup.min.js"></script>
+    <!-- CounterUp JS -->
+    <script src="assets/js/jquery.counterup.min.js"></script>
+    <!-- Meanmenu JS -->
+    <script src="assets/js/jquery.meanmenu.min.js"></script>
+    <!-- Owl-Carousel JS -->
+    <script src="assets/js/owl.carousel.min.js"></script>
+    <!-- Lazysizes -->
+    <script src="assets/js/lazysizes.min.js"></script>
+    <!-- Main script JS -->
+    <script src="assets/js/script.js"></script>
+    <!-- contact form js -->
+    <script src="~/assets/js/contact.form.js"></script>
+    <script src="~/assets/js/sweetalert2.js"></script>
+
+    @RenderSection("scripts", required: false)
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function initMarquee() {
+                document.querySelectorAll('.logo-marquee').forEach(marquee => {
+                    const track = marquee.querySelector('.track');
+                    const images = Array.from(track.querySelectorAll('img'));
+
+                    // Xóa các clone cũ nếu có (khi resize)
+                    track.querySelectorAll('.cloned').forEach(el => el.remove());
+
+                    // Clone đủ để lấp đầy màn hình + thêm 1 set nữa
+                    const marqueeWidth = marquee.offsetWidth;
+                    let currentWidth = 0;
+
+                    images.forEach(img => {
+                        currentWidth += img.offsetWidth + 50; // 50 = margin left + right
+                    });
+                    currentWidth += 40 * (images.length - 1); // gap
+
+                    // Clone cho đến khi đủ rộng gấp 3 lần viewport
+                    const timesToClone = Math.ceil((marqueeWidth * 3) / currentWidth);
+
+                    for (let i = 0; i < timesToClone; i++) {
+                        images.forEach(img => {
+                            const clone = img.cloneNode(true);
+                            clone.classList.add('cloned');
+                            track.appendChild(clone);
+                        });
+                    }
+
+                    // Đợi DOM update
+                    requestAnimationFrame(() => {
+                        const trackWidth = track.scrollWidth;
+                        const singleSetWidth = trackWidth / (timesToClone + 1);
+
+                        // Tạo animation với giá trị pixel tuyệt đối
+                        const isReverse = track.classList.contains('track-right');
+                        const speed = isReverse ? 40 : 50; // pixels/second
+                        const duration = singleSetWidth / speed;
+
+                        const animName = 'marquee-' + Math.random().toString(36).substr(2, 9);
+
+                        const keyframes = `
+                    @@keyframes ${animName} {
+                        0% {
+                            transform: translate3d(${isReverse ? -singleSetWidth : 0}px, 0, 0);
+                        }
+                        100% {
+                            transform: translate3d(${isReverse ? 0 : -singleSetWidth}px, 0, 0);
+                        }
+                    }
+                `;
+
+                        // Thêm style vào head
+                        const styleId = 'marquee-style-' + animName;
+                        let styleEl = document.getElementById(styleId);
+                        if (!styleEl) {
+                            styleEl = document.createElement('style');
+                            styleEl.id = styleId;
+                            document.head.appendChild(styleEl);
+                        }
+                        styleEl.innerHTML = keyframes;
+
+                        // Apply animation
+                        track.style.animation = `${animName} ${duration}s linear infinite`;
+                    });
+                });
+            }
+
+            // Khởi tạo
+            initMarquee();
+
+            // Re-init khi resize (debounce)
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(initMarquee, 250);
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        function setHeartbeat() {
+            setTimeout("heartbeat()", 20 * 1000);
+        }
+
+        function heartbeat() {
+            $.ajax({
+                url: "/ping.ashx",
+            }).done(function () {
+                setHeartbeat();
+            });
+        }
+
+        function lazyloadImage() {
+            setTimeout(function () {
+                var isMobile = window.matchMedia('(max-width: 768px)').matches;
+                var i = $("[data-lazy]");
+                i.length > 0 && i.each(function () {
+                    var i = $(this), e = i.attr("data-lazy");
+                    i.attr("src", e);
+                });
+            }, 1000);
+        }
+
+        $(document).ready(function () {
+            //lazyloadImage();
+            setTimeout(heartbeat(), 0);
+        });
+
+        function setCookie(cname, cvalue, exdays) {
+            const d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            let expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+        $(document).ready(function () {
+            $('.lightbox').modal('show');
+            $(".lightbox").click(function () {
+                $('.lightbox').hide();
+                $('.jquery-modal').hide();
+                setCookie('ck_lightbox', $('.closeads').attr('data-version'), 999999999);
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(document).on("click", ".contact", function () {
+                event.preventDefault();
+
+                Swal.fire({
+                    title: 'Nhập mã captcha',
+                    input: 'text',
+                    inputAttributes: {
+                        autocapitalize: 'off'
+                    },
+                    imageUrl: '/captcha.ashx',
+                    imageWidth: 300,
+                    imageHeight: 150,
+                    showCancelButton: true,
+                    confirmButtonText: 'Ok',
+                    showLoaderOnConfirm: true,
+                    preConfirm: (value) => {
+                        $("input[name='captcha']", this).val(value);
+                        return value;
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then((result) => {
+                    if (!result.isConfirmed)
+                        return;
+
+                    Swal.fire({
+                        title: 'Xin chờ đợi!',
+                        html: 'Hệ thống đang ghi nhận thông tin ..',
+                        didOpen: () => { Swal.showLoading(); },
+                    });
+
+                    $.post(window.location.pathname + "?contact",
+                    {
+                        __RequestVerificationToken: "@Root.AntiForgeryTokenForAjaxPost()",
+                        name: $("input[name='name']").val(),
+                        phone: $("input[name='phone']").val(),
+                        email: $("input[name='email']").val(),
+                        message: $("textarea[name='message']").val(),
+                        captcha: result.value
+                    },
+                    function (data) {
+                        Swal.fire({
+                            title: 'Chúc mừng!',
+                            text: data,
+                            type: "success"
+                        });
+                    })
+                    .fail(function (error) {
+                        Swal.fire({
+                            title: 'Thôi xong!',
+                            text: error.responseText,
+                            type: "error"
+                        });
+                    });
+                })
+            });
+        });
+    </script>
+
+
+    <!--Start of Tawk.to Script-->
+  
+</body>
+</html>

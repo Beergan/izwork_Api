@@ -1,0 +1,245 @@
+﻿@inherits MyWebPage
+@using SLK.Common
+@functions {
+    [Component(
+        Type = ComptType.Page_Template,
+        ComptName = "en:Price page template|vi:Mẫu trang bảng giá")]
+    public class ViewModel
+    {
+        public IDictionary<string, string> Phrases { get; set; } = new Dictionary<string, string>();
+
+        public string MetaDescription { get; set; }
+
+        public string MetaKeywords { get; set; }
+
+        public string Title { get; set; }
+
+        public class Banner
+        {
+            [Field(
+               Title = "en:Ảnh nền|vi:Ảnh nền",
+               Required = false,
+               Control = InputControlType.Image)]
+            public string Image { get; set; }
+
+            [Field(
+                Title = "en:Tiêu đề|vi:Tiêu đề",
+                Required = false,
+                Control = InputControlType.TextBox)]
+            public string Title { get; set; }
+        }
+
+        public class Tab
+        {
+            [Field(
+                Title = "en:Tiêu đề|vi:Tiêu đề",
+                Required = false,
+                Control = InputControlType.TextBox)]
+            public string Title { get; set; }
+
+            [Field(Title = "Các loại giá")]
+            public Pricing[] ItemPrice { get; set; }
+        }
+
+        public class Pricing
+        {
+            [Field(
+                Title = "en:Ảnh|vi:Ảnh",
+                Required = false,
+                Control = InputControlType.Image)]
+            public string Image { get; set; }
+
+            [Field(
+                Title = "en:Giá|vi:Giá",
+                Required = false,
+                Control = InputControlType.TextBox)]
+            public string Price { get; set; }
+
+            [Field(
+                Title = "en:Thời hạn|vi:Thời hạn",
+                Required = false,
+                Control = InputControlType.TextBox)]
+            public string TimeOut { get; set; }
+
+            [Field(
+                Title = "en:Tiêu đề phụ|vi:Tiêu đề phụ",
+                Required = false,
+                Control = InputControlType.TextBox)]
+            public string SubTitle { get; set; }
+
+            [Field(
+                Title = "en:Mô tả|vi:Mô tả",
+                Required = false,
+                Control = InputControlType.RichTextBox)]
+            public string Desc { get; set; }
+        }
+
+        [Field(Title = "Banner")]
+        public Banner banners { get; set; }
+
+        [Field(Title = "Bảng giá")]
+        public Tab[] TabPrice { get; set; }
+
+        public static ViewModel Default => new ViewModel()
+        {
+            banners = new Banner
+            {
+                Title = "Pricing Plan"
+            },
+            TabPrice = new Tab[]
+            {
+                new Tab
+                {
+                    Title = "Theo tháng",
+                    ItemPrice = new Pricing[]
+                    {
+                        new Pricing
+                        {
+                            Image = "https://themeforest.kreativdev.com/samu/demo/assets/images/pricing-7.png",
+                            Price = "$25",
+                            TimeOut = "tháng",
+                            SubTitle = "STARTER",
+                            Desc = "Đang cập nhật..."
+                        },
+                        new Pricing
+                        {
+                            Image = "https://themeforest.kreativdev.com/samu/demo/assets/images/pricing-8.png",
+                            Price = "$35",
+                            TimeOut = "tháng",
+                            SubTitle = "STANDARD",
+                            Desc = "Đang cập nhật..."
+                        },
+                        new Pricing
+                        {
+                            Image = "https://themeforest.kreativdev.com/samu/demo/assets/images/pricing-9.png",
+                            Price = "$45",
+                            TimeOut = "tháng",
+                            SubTitle = "STARTER",
+                            Desc = "Đang cập nhật..."
+                        }
+                    }
+                },
+                new Tab
+                {
+                    Title = "Theo năm",
+                    ItemPrice = new Pricing[]
+                    {
+                        new Pricing
+                        {
+                            Image = "https://themeforest.kreativdev.com/samu/demo/assets/images/pricing-7.png",
+                            Price = "$25",
+                            TimeOut = "năm",
+                            SubTitle = "STARTER",
+                            Desc = "Đang cập nhật..."
+                        },
+                        new Pricing
+                        {
+                            Image = "https://themeforest.kreativdev.com/samu/demo/assets/images/pricing-8.png",
+                            Price = "$35",
+                            TimeOut = "năm",
+                            SubTitle = "STANDARD",
+                            Desc = "Đang cập nhật..."
+                        },
+                        new Pricing
+                        {
+                            Image = "https://themeforest.kreativdev.com/samu/demo/assets/images/pricing-9.png",
+                            Price = "$45",
+                            TimeOut = "năm",
+                            SubTitle = "STARTER",
+                            Desc = "Đang cập nhật..."
+                        }
+                    }
+                }
+            }
+        };
+    }/*end_viewmodel*/
+    private ViewModel _data;
+    private ViewModel Data => _data ?? (_data = ViewModel.Default);
+    private MyTranslator Text => new MyTranslator(Data?.Phrases);
+}
+@{
+    _data = LoadData<ViewModel>(key: $"{LangId}-{FileName}#{NodeSlug}", setup: (model) =>
+    {
+        model = model ?? ViewModel.Default;
+
+        var page = Db.GetOne<PP_Page>(PageId);
+
+        if (page == null)
+        {
+            return model;
+        }
+
+        model.Title = page.Title;
+        model.MetaDescription = page.MetaDescription;
+        model.MetaKeywords = page.MetaKeywords;
+
+        return model;
+    });
+
+    Layout = $"~/_layouts/_layout.cshtml";
+    //Page.Title = Data.Title;
+    Page.Description = Data.MetaDescription;
+    Page.Keywords = Data.MetaKeywords;
+}
+
+    <!-- Start Page Title area-->
+    <div class="page-title-area" style="background-image: url(@Data.banners.Image)">
+        <div class="container">
+            <div class="content text-center">
+                <h1 class="title_banner">@Data.banners.Title</h1>
+                <ul class="list-unstyled">
+                    <li class="d-inline"><a href="/">Trang chủ</a></li>
+                    <li class="d-inline">/</li>
+                    <li class="d-inline active">@Data.Title</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- End Page Title area -->
+    
+    <!-- Start Pricing Area -->
+    <div class="pricing-plan-area pricing-plan-5 pt-120 pb-90">
+        <div class="container">
+            <div class="section-top justify-content-center mb-20">
+                <div class="nav-tabs-navigation">
+                    <ul class="nav nav-tabs">
+                        @foreach (var item in Data.TabPrice.EmptyIfNull().Select((x, y) => new { x, y }))
+                        {
+                            <li class="nav-item">
+                                <button class="nav-link @(item.y == 0 ? "active" : "") " data-bs-toggle="tab" data-bs-target="#@ToneRemoverTab.MakeSlug(item.x.Title)" type="button">@item.x.Title</button>
+                            </li>
+                        }                                           
+                    </ul>
+                </div>
+            </div>
+            <div class="tab-content">
+                @foreach (var item in Data.TabPrice.EmptyIfNull().Select((x,y) => new { x,y }))
+                {
+                    <div class="tab-pane fade @(item.y == 0 ? "show active" : "")" id="@ToneRemoverTab.MakeSlug(item.x.Title)">
+                        <div class="row justify-content-center">
+                            @foreach (var subitem in item.x.ItemPrice.EmptyIfNull())
+                            {
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="item-single mb-30">
+                                        <div class="image">
+                                            <img src="@subitem.Image" alt="image">
+                                        </div>
+                                        <div class="content">
+                                            <span class="price">@subitem.Price</span>
+                                            <span class="type">/@subitem.TimeOut</span>
+                                            <span class="label">@subitem.SubTitle</span>
+                                            <ul class="item-list list-unstyled p-0">
+                                                <li>@subitem.Desc</li>                                                
+                                            </ul>
+                                            <a href="#contact" class="btn primary-btn primary-btn-6">Đăng ký miễn phí</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }                           
+                        </div>
+                    </div>
+                }                                
+            </div>
+        </div>
+    </div>
+    <!-- End Pricing Area -->   
