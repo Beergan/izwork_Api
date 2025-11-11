@@ -1,0 +1,307 @@
+﻿@inherits MyWebPage
+@{
+    Layout = null;
+
+    var domain = Request["domain"];
+    var branchGuid = Request["branchGuid"];
+    var userGuid = Request["user"];
+    var branchName = "";
+    var avatar = "";
+    var staffName = "";
+    bool isAuthenticated = false;
+
+    if (domain == null || userGuid == null || branchGuid == null)
+    {
+        Response.Write("");
+        Response.End();
+    }
+    else
+    {
+        string targetAPI = $"https://{domain}/api/Employee/ListEmployeeApi?Key=BaConBaoCodeLo";
+        string jsonResponse = "";
+
+        using (var client = new WebClient())
+        {
+            client.Headers["Content-type"] = "application/json";
+            client.Encoding = System.Text.Encoding.UTF8;
+
+            jsonResponse = client.DownloadString(targetAPI);
+        }
+
+        var data = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(jsonResponse);
+
+        foreach (var item in data.data)
+        {
+            if (item.officeGuid == branchGuid)
+            {
+                branchName = item.officeName;
+                foreach (var item1 in item.items)
+                {
+                    if (item1.guid == userGuid)
+                    {
+                        avatar = item1.avatar;
+                        staffName = item1.fullName;
+                        isAuthenticated = true;
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        if (!isAuthenticated)
+        {
+            Response.Redirect("/error.html");
+            Response.End();
+        }
+    }
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="~/assets/css/home1.css" rel="stylesheet" />
+<link href="~/assets/css/chat.css" rel="stylesheet" />
+
+<div class="chatContainer">
+
+    <!-- Chat Area -->
+    <div class="chat-area">
+        <div class="chat-header">
+            <div class="chat-header-info">
+                <span class="status-dot online"></span>
+                <div class="chat-title">
+                    <span class="chat-domain-name" id="currentDomain">SLK - Hỗ trợ khách hàng</span>
+                    <span class="chat-status" id="currentStatus">Đang hoạt động</span>
+                </div>
+            </div>
+            <button class="chat-menu-btn" style="color:white;">
+                @*<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" color="white">
+                        <circle cx="12" cy="12" r="1"></circle>
+                        <circle cx="12" cy="5" r="1"></circle>
+                        <circle cx="12" cy="19" r="1"></circle>
+                    </svg>*@
+                X
+            </button>
+        </div>
+
+        <div class="messages-area" id="messagesArea">
+            <div class="message user">
+                <div class="message-content">
+                    <div class="message-bubble">Xin chào! Tôi có thể giúp gì cho bạn?</div>
+                    <div class="message-time">
+                        <svg class="time-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <span class="time-text">14:30</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <div class="input-container">
+                <input type="text" placeholder="Nhập tin nhắn..." id="messageInput">
+                <button class="send-btn" id="sendBtn" replyGuid="0">
+                    <svg class="send-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a href="#" class="contact-fab" title="Liên hệ nhân viên hỗ trợ">
+    <i class="fas fa-comments"></i>
+</a>
+
+<script src="~/assets/js/jquery.min.js"></script>
+<script src="~/Scripts/jquery.signalR-2.4.3.min.js"></script>
+<script src="/signalr/hubs"></script>
+
+<script>
+    $(function () {
+        $('.chatContainer').css('display', 'none');
+
+        var domain = "@domain";
+        var branchGuid = "@branchGuid";
+        var userGuid = "@userGuid";
+        var avatar = "@avatar";
+        var branchName = "@branchName";
+        var staffName = "@staffName";
+
+        var chat = $.connection.chatHub;
+
+        function appendMessage(role, content, time, guid, repGuid, repContent, displayName, repTo) {
+            var roleClass = (role === "admin") ? "admin" : "user";
+            var html = `
+                <div class="message ${roleClass}">
+                    <div class="message-content">
+                        ${repGuid === '0' ? '' :
+                            `<div class="reply-msg my-1">
+                            <div class="msg-reply-container">
+                                    <div class="msg-reply-box">
+                                        <div class="msg-reply-icon">
+                                            <i class="fa-solid fa-reply"></i>
+                                        </div>
+                                        <div class="msg-reply-content">
+                                            <div class="msg-reply-sender">Trả lời ${repTo}</div>
+                                            <div class="msg-reply-text">${repContent}</div>
+                                        </div>
+                                    </div>
+                            </div>
+                            </div>`
+                        }
+                        <div class="d-flex ${roleClass == 'admin' ? 'justify-content-end' : 'justify-content-start'}">
+                            ${roleClass == 'admin' ? `<div class="message-reply" msgGuid="${guid}" repUser="${displayName}" replyContent="${content}" title="Reply this message"><i class="fa-solid fa-reply"></i></div>` : ''}
+                            <div class="message-bubble">${roleClass == 'user' ? `<div class="displayName">${displayName}</div>` : ''}${content}</div>
+                            ${roleClass == 'user' ? `<div class="message-reply" msgGuid="${guid}" repUser="${displayName}" replyContent="${content}" title="Reply this message"><i class="fa-solid fa-reply"></i></div>` : ''}
+                        </div>
+                        <div class="message-time ${roleClass == "admin" ? 'd-flex justify-content-end' : ''}">
+                            <svg class="time-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            <span class="time-text">${time}</span>
+                        </div>
+                    </div>
+                </div>
+                `;
+            $("#messagesArea").append(html);
+            $("#messagesArea").scrollTop($("#messagesArea")[0].scrollHeight);
+        }
+
+        function formatTime() {
+            var d = new Date();
+            return d.getHours().toString().padStart(2, '0') + ":" + d.getMinutes().toString().padStart(2, '0');
+        }
+
+        //fixed here
+        $.getJSON("/admin/chat/chathistory.cshtml", {
+            domain: domain,
+            branchGuid: branchGuid,
+            branchName: branchName
+        })
+            .done(function (res) {
+                if (res.created) {
+                    console.log("Tạo mới branch:", res.branchGuid);
+                } else {
+                    console.log("Lịch sử có:", res.messages.length, "tin nhắn");
+                    res.messages.forEach(function (msg) {
+                        if (msg.StaffGuid == userGuid) {
+                            appendMessage("admin", msg.Content, msg.TimeSent ? msg.TimeSent.substr(11, 5) : "", msg.Guid, msg.ReplyGuid, msg.RepContent, msg.StaffName, msg.RepTo);
+                        } else {
+                            appendMessage("user", msg.Content, msg.TimeSent ? msg.TimeSent.substr(11, 5) : "", msg.Guid, msg.ReplyGuid, msg.RepContent, msg.StaffName, msg.RepTo);
+                        }
+                    });
+                }
+            })
+            .fail(function (xhr) {
+                console.error("Lỗi load lịch sử:", xhr.status, xhr.statusText);
+            });
+
+        chat.client.newMessage = function (payload) {
+            console.log("Nhận message:", payload);
+            if (payload.userGuid == userGuid) {
+                appendMessage("admin", payload.message.Content, formatTime(), payload.message.Guid, payload.message.ReplyGuid, payload.message.RepContent, payload.message.StaffName, payload.message.RepTo);
+            }
+            else {
+                appendMessage("user", payload.message.Content, formatTime(), payload.message.Guid, payload.message.ReplyGuid, payload.message.RepContent, payload.message.StaffName, payload.message.RepTo);
+            }
+        };
+
+        //reply messages
+        function appendReplyBox(content, user) {
+            const replyBox = `
+                <div class="reply-msg1 my-1">
+                    <div class="msg-reply-container">
+                        <div class="msg-reply-box">
+                            <div class="msg-reply-icon">
+                                <i class="fa-solid fa-reply"></i>
+                            </div>
+                            <div class="msg-reply-content">
+                                <div class="msg-reply-sender">Trả lời ${user}</div>
+                                <div class="msg-reply-text">${content}</div>
+                            </div>
+                            <button type="button" class="msg-reply-close">
+                                <svg viewBox="0 0 16 16">
+                                    <path d="M12.207 3.793a1 1 0 010 1.414L9.414 8l2.793 2.793a1 1 0 01-1.414 1.414L8 9.414l-2.793 2.793a1 1 0 01-1.414-1.414L6.586 8 3.793 5.207a1 1 0 011.414-1.414L8 6.586l2.793-2.793a1 1 0 011.414 0z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            $('.input-area').prepend(replyBox);
+        }
+
+        let replyGuid = '0';
+        let repContent = '';
+        let repUser = '';
+        $(document).on('click', '.message-reply', function (e) {
+            e.preventDefault();
+            $('.reply-msg1').remove();
+            repContent = $(this).attr('replyContent');
+            repUser = $(this).attr('repUser');
+            appendReplyBox(repContent, repUser);
+            replyGuid = $(this).attr('msgGuid');
+            repContent = $(this).attr('replyContent');
+        })
+
+        $(document).on('click', 'button.msg-reply-close', function () {
+            $('div.reply-msg1').remove();
+            replyGuid = '0';
+        })
+
+        //send messages
+        $.connection.hub.qs = { domain: domain, branchGuid: branchGuid, role: "customer" };
+        $.connection.hub.start().done(function () {
+            console.log("Kết nối thành công tới hub:", $.connection.hub.id);
+            console.log("Các hàm server:", Object.keys(chat.server));
+
+            $("#sendBtn").click(function () {
+                var msg = $("#messageInput").val().trim();
+                if (!msg) return;
+
+                console.log("Gửi message:", msg);
+                chat.server.sendCustomerMessage(domain, branchGuid, branchName, msg, userGuid, avatar, replyGuid, repContent, staffName, repUser)
+                    .done(function () {
+                        console.log("Gửi thành công lên hub");
+                    })
+                    .fail(function (err) {
+                        console.error("Lỗi gửi message:", err);
+                    });
+
+                $('.reply-msg1').remove();
+                $("#messageInput").val("");
+                $("#messageInput").focus("");
+            });
+
+            $("#messageInput").keypress(function (e) {
+                if (e.which === 13) $("#sendBtn").click();
+            });
+        })
+            .fail(function (err) {
+                console.error("Kết nối hub thất bại:", err);
+            });
+    });
+
+    //box chat css
+    $('a.contact-fab').on('click', function (e) {
+        e.preventDefault();
+        $(this).css('display', 'none');
+        $('.chatContainer').css('display', 'flex');
+        $("#messagesArea").scrollTop($("#messagesArea")[0].scrollHeight);
+
+        window.parent.postMessage({ type: 'KienCodeJSVip' }, '*');
+    })
+
+    $('.chat-header').on('click', function (e) {
+        e.preventDefault();
+        $('.chatContainer').css('display', 'none');
+        $('a.contact-fab').css('display', 'flex');
+        window.parent.postMessage({ type: 'KienDevLoTapCode2025' }, '*');
+    })
+
+</script>

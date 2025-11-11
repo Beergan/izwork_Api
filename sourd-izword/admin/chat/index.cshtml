@@ -1,0 +1,368 @@
+﻿@inherits MyAdminPage
+@{
+    CheckAuthen()();
+
+    Page.Title = $"{Text["Chat Manager", "QUẢN LÝ TIN NHẮN"]}";
+    Page.Menu = "chat";
+
+    Func<string, string> makeBreadcrumb = (string s) =>
+            string.Join(" > ", Newtonsoft.Json.JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(s).Select(b => b.Value));
+
+    var chatGroups = Db.Table<pp_chat_group>()
+                    .Join(Db.Table<pp_branch>(),
+                    g => g.Id,
+                    b => b.GroupId,
+                    (ng, nb) => new { Group = ng, Branch = nb })
+                    .Select(s => new
+                    {
+                        Group = s.Group,
+                        Branch = s.Branch
+                    })
+                    .OrderByDescending(o => o.Branch.CreatedTime)
+                    .ToList();
+
+    var firstGroup = chatGroups.OrderByDescending(o => o.Branch.CreatedTime).FirstOrDefault();
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            @RenderPage($"{Constants.Admin_Url}/_share/_breadcrum.cshtml", new { CurrentBreadcrumb = "Quản lý tin nhắn" })
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card-box table-responsive">
+                <div class="chatContainer">
+                    <!-- Sidebar -->
+                    <div class="sidebar">
+                        <div class="sidebar-header">
+                            <h1>Quản lý tin nhắn</h1>
+                            <div class="search-box">
+                                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <path d="m21 21-4.35-4.35"></path>
+                                </svg>
+                                <input type="text" placeholder="Tìm kiếm domain..." id="searchInput">
+                            </div>
+                        </div>
+
+                        <div class="domain-list" id="domainList">
+
+                            @foreach (var group in chatGroups)
+                            {
+                                var title = @group.Branch.BranchName + " - " + @group.Group.Domain;
+                                <div class="domain-item" data-domain="shop.example.com" title="@title">
+                                    <input type="hidden" class="domain" value="@group.Group.Domain" />
+                                    <input type="hidden" class="branchGuid" value="@group.Branch.BranchGuid" />
+                                    <input type="hidden" class="branchName" value="@group.Branch.BranchName" />
+                                    <div class="domain-header">
+                                        <div class="domain-info">
+                                            <div class="domain-title">
+                                                <span class="status-dot online"></span>
+                                                <span class="domain-name">@title</span>
+                                            </div>
+                                            @{ var isMsgNull = group.Branch.Messages.OrderByDescending(o => o.TimeSent).FirstOrDefault() == null ? true : false; }
+                                            <div class="last-message @group.Branch.BranchGuid">@(isMsgNull ? "" : group.Branch.Messages.OrderByDescending(o => o.TimeSent).FirstOrDefault().Content)</div>
+                                        </div>
+                                        <div class="domain-meta">
+                                            <span class="domain-time">2 phút</span>
+                                            <span class="unread-badge">3</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Chat Area -->
+                    <div class="chat-area" currentBranch="">
+                        <div class="chat-header">
+                            <div class="chat-header-info">
+                                <span class="status-dot online"></span>
+                                <div class="chat-title">
+                                    <span class="chat-domain-name" id="currentDomain">@(firstGroup == null ? "" : firstGroup.Branch.BranchName + " - " + firstGroup.Group.Domain)</span>
+                                    <span class="chat-status" id="currentStatus">Đang hoạt động</span>
+                                </div>
+                            </div>
+                            <button class="chat-menu-btn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="1"></circle>
+                                    <circle cx="12" cy="5" r="1"></circle>
+                                    <circle cx="12" cy="19" r="1"></circle>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="messages-area" id="messagesArea">
+
+                        </div>
+
+                        <div class="input-area">
+                            <div class="input-container">
+                                <input type="text" placeholder="Nhập tin nhắn..." id="messageInput">
+                                <button class="send-btn" id="sendBtn" replyGuid="0">
+                                    <svg class="send-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section head{
+    <!-- third party css -->
+    <link href="@Constants.Admin_Url/assets/libs/datatables/dataTables.bootstrap4.css" rel="stylesheet" type="text/css" />
+    <link href="@Constants.Admin_Url/assets/libs/datatables/buttons.bootstrap4.css" rel="stylesheet" type="text/css" />
+    <link href="@Constants.Admin_Url/assets/libs/datatables/responsive.bootstrap4.css" rel="stylesheet" type="text/css" />
+    <link href="@Constants.Admin_Url/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+    <link href="@Constants.Admin_Url/assets/css/chat.css" rel="stylesheet" type="text/css" />
+}
+
+@section scripts{
+    <!-- Required datatable js -->
+    <script src="@Constants.Admin_Url/assets/libs/datatables/jquery.dataTables.min.js"></script>
+    <script src="@Constants.Admin_Url/assets/libs/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="@Constants.Admin_Url/assets/libs/datatables/dataTables.responsive.min.js"></script>
+    <script src="@Constants.Admin_Url/assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+    <script src="@Constants.Admin_Url/assets/libs/sweetalert2/sweetalert2.min.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.4.3.min.js"></script>
+    <script src="/signalr/hubs"></script>
+    <script>
+        $(function () {
+            @{ bool isNullFirst = firstGroup == null ? true : false; }
+            let domain = "@(isNullFirst ? "" : firstGroup.Group.Domain)";
+            let branchGuid = "@(isNullFirst ? "" : firstGroup.Branch.BranchGuid)";
+            let branchName = "@(isNullFirst ? "" : firstGroup.Branch.BranchName)";
+            let userGuid = "admin12345";
+
+            var chat = $.connection.chatHub;
+
+            //load new message
+            function appendMessage(role, content, time, guid, repGuid, repContent, displayName, repTo) {
+                var roleClass = (role === "admin") ? "admin" : "user";
+                var html = `
+                    <div class="message ${roleClass}">
+                        <div class="message-content">
+                            ${repGuid === '0' ? '' :
+                                    `<div class="reply-msg my-1">
+                                <div class="msg-reply-container">
+                                        <div class="msg-reply-box">
+                                            <div class="msg-reply-icon">
+                                                <i class="fa-solid fa-reply"></i>
+                                            </div>
+                                            <div class="msg-reply-content">
+                                                <div class="msg-reply-sender">Trả lời ${repTo}</div>
+                                                <div class="msg-reply-text">${repContent}</div>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>`
+                                }
+                            <div class="d-flex ${roleClass == 'admin' ? 'justify-content-end' : 'justify-content-start'}">
+                                ${roleClass == 'admin' ? `<div class="message-reply" msgGuid="${guid}" repUser="${displayName}" replyContent="${content}" title="Reply this message"><i class="fa-solid fa-reply"></i></div>` : ''}
+                                <div class="message-bubble">${roleClass == 'user' ? `<div class="displayName">${displayName}</div>` : ''}${content}</div>
+                                ${roleClass == 'user' ? `<div class="message-reply" msgGuid="${guid}" repUser="${displayName}" replyContent="${content}" title="Reply this message"><i class="fa-solid fa-reply"></i></div>` : ''}
+                            </div>
+                            <div class="message-time ${roleClass == "admin" ? 'd-flex justify-content-end' : ''}">
+                                <svg class="time-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                <span class="time-text">${time}</span>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+                $("#messagesArea").append(html);
+                $("#messagesArea").scrollTop($("#messagesArea")[0].scrollHeight);
+            }
+
+            function formatTime() {
+                var d = new Date();
+                return d.getHours().toString().padStart(2, '0') + ":" + d.getMinutes().toString().padStart(2, '0');
+            }
+
+            //get chat history
+            var groupData = {
+                domain: domain,
+                branchGuid: branchGuid,
+                branchName: branchName
+            }
+
+            function getHistory(groupData) {
+                $.getJSON("/admin/chat/chathistory.cshtml", groupData)
+                    .done(function (res) {
+                        if (res.created) {
+                            console.log("Tạo mới branch:", res.branchGuid);
+                        } else {
+                            console.log("Lịch sử có:", res.messages.length, "tin nhắn");
+                            res.messages.forEach(function (msg) {
+                                if (msg.StaffGuid == userGuid) {
+                                    appendMessage("admin", msg.Content, msg.TimeSent ? msg.TimeSent.substr(11, 5) : "", msg.Guid, msg.ReplyGuid, msg.RepContent, msg.StaffName, msg.RepTo);
+                                } else {
+                                    appendMessage("user", msg.Content, msg.TimeSent ? msg.TimeSent.substr(11, 5) : "", msg.Guid, msg.ReplyGuid, msg.RepContent, msg.StaffName, msg.RepTo);
+                                }
+                            });
+                        }
+
+                        $('.chat-area').attr('currentBranch', res.branchGuid);
+                    })
+                    .fail(function (xhr) {
+                        console.error("Lỗi load lịch sử:", xhr.status, xhr.statusText);
+                    });
+            }
+
+            getHistory(groupData);
+
+            //get branch history
+            $(document).on('click', '.domain-item', function (e) {
+                $('#messagesArea').html('');
+                var data = {
+                    domain: $(this).find('input.domain').val(),
+                    branchGuid: $(this).find('input.branchGuid').val(),
+                    branchName: $(this).find('input.branchName').val()
+                }
+                getHistory(data);
+                $('.chat-area').attr('currentBranch', data.branchGuid);
+                $('span#currentDomain').text(`${data.branchName} - ${data.domain}`);
+            })
+
+            //load new branch
+            chat.client.branchCreated = function (branch) {
+                console.log("Branch mới:", branch);
+
+                const html = `
+                    <div class="domain-item" domain="${branch.domain}" branchGuid="${branch.branchGuid}" title="${branch.branchName} - ${branch.domain}">
+                        <input type="hidden" class="domain" value="${branch.domain}" />
+                        <input type="hidden" class="branchGuid" value="${branch.branchGuid}" />
+                        <input type="hidden" class="branchName" value="${branch.branchName}" />
+                        <div class="domain-header">
+                            <div class="domain-info">
+                                <div class="domain-title">
+                                    <span class="status-dot online"></span>
+                                    <span class="domain-name">${branch.branchName} - ${branch.domain}</span>
+                                </div>
+                                <div class="last-message">${branch.lastMessage}</div>
+                            </div>
+                            <div class="domain-meta">
+                                <span class="domain-time">vừa xong</span>
+                                <span class="unread-badge">1</span>
+                            </div>
+                        </div>
+                    </div>`;
+
+                $("#domainList").prepend(html);
+
+                chat.server.joinGroup(branch.domain, branch.branchGuid);
+            };
+
+            //receive messages
+            chat.client.newMessage = function (payload) {
+                console.log("Nhận message:", payload);
+                console.log('thong tin nhan duoc');
+                console.log($('.chat-area').attr('currentBranch'));
+                console.log(payload.branchGuid);
+
+                $(`.last-message.${payload.branchGuid}`).text(payload.message.Content);
+
+                if (payload.role == "admin") {
+                    appendMessage("admin", payload.message.Content, formatTime(), payload.message.Guid, payload.message.ReplyGuid, payload.message.RepContent, payload.message.StaffName, payload.message.RepTo);
+                }
+                else {
+                    appendMessage("user", payload.message.Content, formatTime(), payload.message.Guid, payload.message.ReplyGuid, payload.message.RepContent, payload.message.StaffName, payload.message.RepTo);
+                }
+            };
+
+            //reply messages
+            function appendReplyBox(content, user) {
+                const replyBox = `
+                    <div class="reply-msg1 my-1">
+                        <div class="msg-reply-container">
+                                <div class="msg-reply-box">
+                                    <div class="msg-reply-icon">
+                                        <i class="fa-solid fa-reply"></i>
+                                    </div>
+                                    <div class="msg-reply-content">
+                                        <div class="msg-reply-sender">Trả lời ${user}</div>
+                                        <div class="msg-reply-text">${content}</div>
+                                    </div>
+                                    <button type="button" class="msg-reply-close">
+                                        <svg viewBox="0 0 16 16">
+                                            <path d="M12.207 3.793a1 1 0 010 1.414L9.414 8l2.793 2.793a1 1 0 01-1.414 1.414L8 9.414l-2.793 2.793a1 1 0 01-1.414-1.414L6.586 8 3.793 5.207a1 1 0 011.414-1.414L8 6.586l2.793-2.793a1 1 0 011.414 0z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                        </div>
+                    </div>
+                    `;
+                $('.input-area').prepend(replyBox);
+            }
+
+            let replyGuid = '0';
+            let repContent = '';
+            let repUser = '';
+            $(document).on('click', '.message-reply', function (e) {
+                e.preventDefault();
+                $('.reply-msg1').remove();
+                repContent = $(this).attr('replyContent');
+                repUser = $(this).attr('repUser');
+                appendReplyBox(repContent, repUser);
+                replyGuid = $(this).attr('msgGuid');
+                repContent = $(this).attr('replyContent');
+            })
+
+            $(document).on('click', 'button.msg-reply-close', function () {
+                $('div.reply-msg1').remove();
+                replyGuid = '0';
+            })
+
+            //while connecting
+            $.connection.hub.qs = { domain: domain, branchGuid: branchGuid, role: "admin" };
+            $.connection.hub.start().done(function () {
+                console.log("Kết nối thành công tới hub:", $.connection.hub.id);
+                console.log("Các hàm server:", Object.keys(chat.server));
+
+                //ket noi voi cac group chat
+                $('.domain-item').each(function () {
+                    var domain = $(this).attr('domain');
+                    var branchGuid = $(this).attr('branchGuid');
+                    chat.server.joinGroup(domain, branchGuid);
+                })
+
+                $("#sendBtn").click(function () {
+                    var msg = $("#messageInput").val().trim();
+                    if (!msg) return;
+
+                    console.log("Gửi message:", msg);
+                    chat.server.sendStaffMessage(domain, branchGuid, msg, userGuid, "Admin", "avatar.jpg", replyGuid, repContent, repUser)
+                        .done(function () {
+                            console.log("Gửi thành công lên hub");
+                        })
+                        .fail(function (err) {
+                            console.error("Lỗi gửi message:", err);
+                        });
+
+                    $('.reply-msg1').remove();
+                    $("#messageInput").val("");
+                    $("#messageInput").focus("");
+                });
+
+                $("#messageInput").keypress(function (e) {
+                    if (e.which === 13) $("#sendBtn").click();
+                });
+            })
+                .fail(function (err) {
+                    console.error("Kết nối hub thất bại:", err);
+                });
+        });
+    </script>
+}

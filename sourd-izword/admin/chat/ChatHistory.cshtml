@@ -1,0 +1,85 @@
+﻿@inherits MyWebPage
+@using System
+@using System.Linq
+@using System.Web.Helpers
+
+@{
+    Layout = null;
+    Response.ContentType = "application/json; charset=utf-8";
+    var domain = Request["domain"];
+    var branchGuid = Request["branchGuid"];
+    var branchName = Request.Unvalidated["branchName"];
+    var take = string.IsNullOrEmpty(Request["take"]) ? 100 : Convert.ToInt32(Request["take"]);
+
+    if (string.IsNullOrEmpty(domain))
+    {
+        Response.StatusCode = 400;
+        Response.Write("{\"error\":\"Missing domain\"}");
+        return;
+    }
+
+    if (string.IsNullOrEmpty(branchGuid))
+    {
+        Response.StatusCode = 400;
+        Response.Write("{\"error\":\"Missing branchGuid\"}");
+        return;
+    }
+
+    var group = Db.Table<pp_chat_group>().Where(b => b.Domain == domain).FirstOrDefault();
+    if (group == null)
+    {
+        group = new pp_chat_group
+        {
+            Domain = domain,
+            CreatedDate = DateTime.UtcNow
+        };
+        Db.Insert(group);
+    }
+
+    var branch = Db.Table<pp_branch>().Where(b => b.BranchGuid == branchGuid && b.GroupId == group.Id).FirstOrDefault();
+    if (branch == null)
+    {
+        branch = new pp_branch
+        {
+            GroupId = group.Id,
+            BranchGuid = branchGuid,
+            BranchName = string.IsNullOrEmpty(branchName) ? "Chi nhánh mới" : branchName,
+            MessagesJson = "[]"
+        };
+        Db.Insert(branch);
+
+        Response.Write(Json.Encode(new
+        {
+            created = true,
+            message = "Branch created for domain",
+            branchGuid = branchGuid,
+            domain = domain,
+            messages = new List<MessageJson>()
+        }));
+
+        var branchCreatedPayload = new
+        {
+            domain = domain,
+            branchGuid = branch.BranchGuid,
+            branchName = branch.BranchName,
+            lastMessage = "Chưa có tin nhắn",
+            time = DateTime.UtcNow.ToString("o")
+        };
+
+        var context = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
+        context.Clients.All.branchCreated(branchCreatedPayload);
+
+        return;
+    }
+
+    var msgs = branch.Messages ?? new List<MessageJson>();
+    var list = msgs.Count <= take ? msgs : msgs.Skip(msgs.Count - take).ToList();
+
+    Response.Write(Json.Encode(new
+    {
+        created = false,
+        branchGuid = branchGuid,
+        domain = domain,
+        messages = list
+    }));
+}
